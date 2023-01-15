@@ -48,14 +48,4 @@
   .records-view {
     margin: 0px max(2.6rem, 5%);
   }
-  .input-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .input-box > div {
-    width: 50%;
-    display: flex;
-    justify-content: left;
-  }
 </style>

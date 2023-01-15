@@ -1,0 +1,61 @@
+<script lang="ts">
+  import type { QueryConstraint } from "@firebase/firestore";
+
+  import type { Record } from "$lib/records";
+  import { getRecordsList } from "$lib/records";
+
+  import RecordInputBox from "@/components/records/RecordInputBox.svelte";
+  import SearchQueryMaker from "@/components/records/SearchQueryMaker.svelte";
+  import RecordsList from "@/components/records/RecordsList.svelte";
+
+  let records: Record[] = [];
+  $: records = records;
+
+  // レコードリストを取得. クエリメーカーで作成されたクエリを渡してもらう.
+  const acquireList = async (queries: QueryConstraint[]) => {
+    records = [];
+    await getRecordsList(records, queries)();
+  };
+
+  const addRecord = (ev: CustomEvent<{ record: Record }>) => {
+    const addedRecord = ev.detail.record;
+    records.splice(0, 0, addedRecord);
+    records = records;
+  };
+
+  const deleteRecord = async (ev: CustomEvent<{ index: number }>) => {
+    const index = ev.detail.index;
+    records.splice(index, 1);
+    records = records;
+  };
+</script>
+
+<div class="records-view">
+  <h4>入力</h4>
+  <RecordInputBox on:record-added={addRecord} />
+  <!-- <record-input-box on:record-added={addRecord} /> -->
+  <h4>検索</h4>
+  <SearchQueryMaker fetchCallback={acquireList} />
+  <!-- <query-maker :fetch-callback="acquireList" /> -->
+  <h4>レコードリスト</h4>
+  <div class="record-list-container">
+    <RecordsList {records} on:delete-record={deleteRecord} />
+    <!-- <records-list-vue :records="records" @delete-record="deleteRecord" /> -->
+  </div>
+</div>
+
+<style>
+  .records-view {
+    margin: 0px max(2.6rem, 5%);
+  }
+  .input-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .input-box > div {
+    width: 50%;
+    display: flex;
+    justify-content: left;
+  }
+</style>

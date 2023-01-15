@@ -1,45 +1,30 @@
 <script lang="ts">
-  import { toDateString, toTimeString } from "$lib/utils";
-  import { DateInput } from "date-picker-svelte";
+  // NOTE: 2023/1/16 SveltyPickerはいい感じだったがバインドにバグがありそう（REPLも動いていなかった）
   import { createEventDispatcher } from "svelte";
 
   $: active = false;
   // 任意時刻入力のための日付文字列
-  $: inputDate = toDateString(new Date());
-  // $: inputTime = toTimeString(new Date());
-  $: pickedDate = new Date();
-  // $: pickedTime = new Date();
+  $: inputDate = new Date().toLocaleDateString();
+  $: inputTime = new Date().toLocaleTimeString();
 
   const dispatch = createEventDispatcher();
 
-  // emits: ["input-time-changed", "toggle-active"],
   const toggleActive = () => {
     active = !active;
     dispatch("toggle-active");
   };
 
-  // watch([pickedDate, pickedTime], () => {
-  //   context.emit("input-time-changed", getArbitTimeAsDate());
-  // });
-
   $: {
-    pickedDate;
+    inputDate;
+    inputTime;
+    // console.log(getArbitTimeAsDate());
     dispatch("input-time-changed", getArbitTimeAsDate());
   }
 
   const getArbitTimeAsDate = () => {
     // 外部パッケージを用いて取得した日時を一つのDateオブジェクトにして返す.
-    const date = pickedDate;
-    // const time = pickedTime;
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      date.getHours(),
-      date.getMinutes()
-      // time.getHours(),
-      // time.getMinutes()
-    );
+    const datetimeStr = `${inputDate} ${inputTime}`;
+    return new Date(datetimeStr);
   };
 </script>
 
@@ -51,24 +36,9 @@
   {:else}
     <button class="toggle-button" on:click={toggleActive}>-</button>
     <label for="date-picker">日付</label>
-    <div id="date-picker">
-      <DateInput bind:value={pickedDate} format="yyyy-MM-dd HH:mm" />
-    </div>
-    <!-- <datepicker
-      class="date-picker"
-      startingView="day"
-      minimumView="day"
-      inputFormat="yyyy-MM-dd"
-      v-model="pickedDate"
-    /> -->
-    <!-- <label>時刻</label> -->
-    <!-- <datepicker
-      class="date-picker"
-      startingView="time"
-      minimumView="time"
-      inputFormat="HH:mm"
-      v-model="pickedTime"
-    /> -->
+    <input id="date-picker" type="date" bind:value={inputDate} />
+    <label for="time-picker">時刻</label>
+    <input id="time-picker" type="time" bind:value={inputTime} />
   {/if}
 </div>
 
@@ -80,9 +50,10 @@
   }
   .toggle-button {
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    line-height: 1rem;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    line-height: 1.8rem;
     border: 1px solid #000;
     cursor: pointer;
   }

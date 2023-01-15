@@ -30,7 +30,6 @@
   },
   "type": "module",
   "dependencies": {
-    "date-picker-svelte": "^2.2.5",
     "firebase": "^9.15.0"
   }
 }

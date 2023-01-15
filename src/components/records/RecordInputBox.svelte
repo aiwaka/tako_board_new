@@ -132,11 +132,12 @@
 
   fieldset.record-input {
     display: grid;
-    grid-template-rows: repeat(2, 2.1rem);
+    grid-template-rows: repeat(2, 2.8rem);
+    line-height: 2.8rem;
     grid-template-columns: 6rem 1fr;
-    row-gap: 1.5rem;
+    row-gap: 1.8rem;
     column-gap: 1rem;
-    padding: 0.6rem 1.5rem;
+    padding: 1.2rem 1.5rem;
     border: none;
   }
   fieldset.record-input input {
@@ -153,10 +154,5 @@
   fieldset.record-input select {
     border: 1px solid #777;
     transition: ease-in-out 0.2s;
-  }
-  fieldset.record-input input:focus {
-    outline-width: 0;
-    border-radius: 5px;
-    background-color: rgba(0, 0, 0, 0.1);
   }
 </style>

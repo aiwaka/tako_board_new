@@ -652,6 +652,11 @@
   dependencies:
     import-meta-resolve "^2.2.0"
 
+"@sveltejs/adapter-static@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-static/-/adapter-static-1.0.3.tgz#fc9295e6c86a96ecf232ce95d3ae67796c19f58e"
+  integrity sha512-krLT8mW/3ty0FJyK1XtetpH+rTt6pB6vFHwdKGHNBsed1QmZi1mg2G6QpEg+dwkVOAPuZaO+nWmhdjncfC4aUQ==
+
 "@sveltejs/kit@^1.0.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.1.1.tgz#5e598fb524cafd920e40bed2c8a5c6e2da3cd634"
@@ -957,6 +962,11 @@ cross-spawn@^7.0.2:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+date-picker-svelte@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/date-picker-svelte/-/date-picker-svelte-2.2.5.tgz#83bb6c6c474938e25662cd0b0d2f2857a8089be5"
+  integrity sha512-cexGp5ugTLQqxpjoBsn3JQOGVsBwRpeHj76dwtEPCIyc4w0m5H/Zv6GkqRJd8aJSlo2uK21Dx4QnnCh7rLVh4g==
 
 debug@^4.1.1, debug@^4.3.2, debug@^4.3.4:
   version "4.3.4"

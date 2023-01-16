@@ -1,6 +1,7 @@
 <script lang="ts">
   // NOTE: 2023/1/16 SveltyPickerはいい感じだったがバインドにバグがありそう（REPLも動いていなかった）
   import { createEventDispatcher } from "svelte";
+  import ToggleButton from "../ToggleButton.svelte";
 
   $: active = false;
   // 任意時刻入力のための日付文字列
@@ -30,11 +31,10 @@
 
 <!-- 任意時刻を指定できるボックス. 反映されるか否かはボックスを開いているか否かのみに依存する. -->
 <div class="arbitrary-time-input">
+  <ToggleButton {active} on:click={toggleActive} />
   {#if !active}
-    <button class="toggle-button" on:click={toggleActive}>+</button>
     <span>任意の時刻を入力</span>
   {:else}
-    <button class="toggle-button" on:click={toggleActive}>-</button>
     <label for="date-picker">日付</label>
     <input id="date-picker" type="date" bind:value={inputDate} />
     <label for="time-picker">時刻</label>
@@ -47,15 +47,6 @@
     border: 1px solid #777;
     margin: 0.6rem auto;
     padding: 1rem 0.6rem;
-  }
-  .toggle-button {
-    display: inline-block;
-    width: 2rem;
-    height: 2rem;
-    background: transparent;
-    line-height: 1.8rem;
-    border: 1px solid #000;
-    cursor: pointer;
   }
   span {
     margin: 0 0.5rem;

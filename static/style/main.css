@@ -108,6 +108,9 @@ select {
   background-color: var(--main-bg-color);
   color: var(--main-font-color);
 }
+button[disabled] {
+  color: gray;
+}
 input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: white;
 }

@@ -19,8 +19,8 @@
     records = records;
   };
 
-  const addRecord = (ev: CustomEvent<{ record: Record }>) => {
-    const addedRecord = ev.detail.record;
+  const addRecord = (ev: CustomEvent<{ addedRecord: Record }>) => {
+    const addedRecord = ev.detail.addedRecord;
     records.splice(0, 0, addedRecord);
     records = records;
   };
@@ -35,14 +35,12 @@
 <div class="records-view">
   <h4>入力</h4>
   <RecordInputBox on:record-added={addRecord} />
-  <!-- <record-input-box on:record-added={addRecord} /> -->
   <h4>検索</h4>
   <SearchQueryMaker fetchCallback={acquireList} />
   <!-- <query-maker :fetch-callback="acquireList" /> -->
   <h4>レコードリスト</h4>
   <div class="record-list-container">
     <RecordsList {records} on:delete-record={deleteRecord} />
-    <!-- <records-list-vue :records="records" @delete-record="deleteRecord" /> -->
   </div>
 </div>
 

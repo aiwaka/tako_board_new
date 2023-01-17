@@ -4,15 +4,22 @@
 
   import { recordTypeStrList } from "$lib/records";
   import { onMount } from "svelte";
-  import DatePicker from "./DatePicker.svelte";
   import ToggleButton from "../ToggleButton.svelte";
 
   const today = new Date();
+  // setDateはオブジェクトを変更するので適当な変数をつくる
   const tempToday = new Date();
   const prevWeekDay = new Date(tempToday.setDate(tempToday.getDate() - 7));
 
-  $: endDate = toDateString(today);
-  $: startDate = toDateString(prevWeekDay);
+  $: endDateStr = toDateString(today);
+  $: endDateTomorrowStr = "";
+  $: {
+    const endDate = new Date(endDateStr);
+    const endDateTomorrow = new Date(endDate.setDate(endDate.getDate() + 1));
+    endDateTomorrowStr = toDateString(endDateTomorrow);
+  }
+  $: startDateStr = toDateString(prevWeekDay);
+
   $: active = false;
   $: fetchButtonDisabled = true;
   $: recordType = -1;
@@ -28,8 +35,8 @@
     // 降順の場合startとendが逆になる.
     const queries: QueryConstraint[] = [
       orderBy("date", "desc"),
-      endAt(new Date(startDate)),
-      startAt(new Date(endDate)),
+      endAt(new Date(startDateStr)),
+      startAt(new Date(endDateTomorrowStr)),
     ];
     if (recordType !== -1) {
       queries.push(where("type", "==", recordType));
@@ -38,32 +45,25 @@
     await fetchCallback(queries);
   };
 
-  // 表示日が初期状態から変更された場合, レコード再取得ボタンを有効化する.
-  const endDateChanged = (event: CustomEvent<{ endDate: string }>) => {
-    endDate = event.detail.endDate;
-    recordTypeChanged();
-  };
-  const startDateChanged = (event: CustomEvent<{ startDate: string }>) => {
-    startDate = event.detail.startDate;
-    recordTypeChanged();
-  };
-  const recordTypeChanged = () => (fetchButtonDisabled = false);
+  const enableFetchButton = () => (fetchButtonDisabled = false);
 </script>
 
 <!-- Firestore検索クエリを作成し取得ボタンを押したらコールバックに渡すコンポーネント -->
 <div class="query-maker">
   <ToggleButton {active} on:click={toggleActive} />
   {#if !active}
-    <!-- <button class="toggle-button" on:click={toggleActive}>+</button> -->
     <span>検索ボックス</span>
   {:else}
-    <!-- <button class="toggle-button" on:click={toggleActive}>-</button> -->
     <div class="input-box">
       <h4>期間指定</h4>
-      <DatePicker on:end-date-changed={endDateChanged} on:start-date-changed={startDateChanged} />
+      <div class="date-selector">
+        <input type="date" bind:value={startDateStr} on:change={enableFetchButton} />
+        から
+        <input type="date" bind:value={endDateStr} on:change={enableFetchButton} />
+      </div>
 
       <h4>タイプ指定</h4>
-      <select name="query-record-type" bind:value={recordType} on:change={recordTypeChanged}>
+      <select name="query-record-type" bind:value={recordType} on:change={enableFetchButton}>
         <option value={-1}>---</option>
         {#each recordTypeStrList as recordTypeStr, index (recordTypeStr)}
           <option value={index}>{recordTypeStr}</option>
@@ -96,5 +96,12 @@
   }
   .search-execute {
     margin-top: 0.6rem;
+  }
+  .date-selector {
+    display: flex;
+    justify-content: center;
+  }
+  .date-selector > input {
+    margin: auto 15px;
   }
 </style>

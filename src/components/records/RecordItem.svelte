@@ -20,13 +20,11 @@
     }
   });
 
-  // emits: ["delete-record"],
-
   $: commentIsLong = record.comment.length > OMIT_THRESHOLD;
   $: shortComment = record.comment.substring(0, OMIT_THRESHOLD) + "...";
 
   const toggleShowComment = () => (showWholeComment = !showWholeComment);
-  const deleteRecord = () => dispatch("delete-record", record.id);
+  const deleteRecord = () => dispatch("delete-record", { id: record.id });
 </script>
 
 <tr class="record">

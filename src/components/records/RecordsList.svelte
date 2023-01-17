@@ -6,14 +6,14 @@
   export let records: Record[];
 
   const dispatch = createEventDispatcher();
-  // emits: ["delete-record"],
+
   const deleteRecord = async (ev: CustomEvent<{ id: string }>) => {
     const id = ev.detail.id;
     if (confirm("削除しますか？")) {
       await deleteRecordFromFirestore(id);
       const index = records.findIndex((rec) => rec.id === id);
       if (index !== -1) {
-        dispatch("delete-record", index);
+        dispatch("delete-record", { index });
       }
     }
   };

@@ -5,14 +5,11 @@ export const fillZero = (num: number, digit: number): string => {
 
 export const toDateString = (date: Date): string => {
   // input[type='date']で用いる日付文字列に変換する
-  // return (
-  //   `${date.getFullYear()}-${fillZero(date.getMonth() + 1, 2)}` +
-  //   `-${fillZero(date.getDate(), 2)}`
-  // );
-  return date.toDateString();
+  return `${date.getFullYear()}-${fillZero(date.getMonth() + 1, 2)}-${fillZero(date.getDate(), 2)}`;
+  // return date.toDateString();
 };
 
 export const toTimeString = (time: Date): string => {
   // input[type='time']で用いる時刻文字列に変換する. 秒は用いない.
-  return `${fillZero(time.getHours(), 2)}` + `:${fillZero(time.getMinutes(), 2)}`;
+  return `${fillZero(time.getHours(), 2)}:${fillZero(time.getMinutes(), 2)}`;
 };

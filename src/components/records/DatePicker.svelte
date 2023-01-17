@@ -12,12 +12,10 @@
   const dispatch = createEventDispatcher();
 
   const endDateChanged = () => {
-    dispatch("end-date-changed", endDate);
-    // context.emit("end-date-changed", endDate.value);
+    dispatch("end-date-changed", { endDate });
   };
   const startDateChanged = () => {
-    dispatch("start-date-changed", startDate);
-    // context.emit("start-date-changed", startDate.value);
+    dispatch("start-date-changed", { startDate });
   };
 </script>
 

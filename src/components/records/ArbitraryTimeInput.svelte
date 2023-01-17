@@ -1,24 +1,25 @@
 <script lang="ts">
   // NOTE: 2023/1/16 SveltyPickerはいい感じだったがバインドにバグがありそう（REPLも動いていなかった）
   import { createEventDispatcher } from "svelte";
+  import { getTimeText, getDateText } from "$lib/utils";
   import ToggleButton from "../ToggleButton.svelte";
 
   $: active = false;
   // 任意時刻入力のための日付文字列
-  $: inputDate = new Date().toLocaleDateString();
-  $: inputTime = new Date().toLocaleTimeString();
+  const currentDatetime = new Date();
+  $: inputDate = getDateText(currentDatetime);
+  $: inputTime = getTimeText(currentDatetime);
 
   const dispatch = createEventDispatcher();
 
   const toggleActive = () => {
     active = !active;
-    dispatch("toggle-active");
+    dispatch("toggle-active", { active });
   };
 
   $: {
     inputDate;
     inputTime;
-    // console.log(getArbitTimeAsDate());
     dispatch("input-time-changed", { datetime: getArbitTimeAsDate() });
   }
 

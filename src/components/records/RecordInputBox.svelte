@@ -31,8 +31,11 @@
     uploadStatus.status = 0;
   };
 
-  const toggleArbitTimeActive = () => {
-    arbitraryTimeActive = !arbitraryTimeActive;
+  /**
+   * 任意時刻入力の有効フラグを書き換える. 整合性を保つためにフラグ反転ではなく代入にする.
+   */
+  const changeArbitTimeActiveState = (ev: CustomEvent<{ active: boolean }>) => {
+    arbitraryTimeActive = ev.detail.active;
   };
   const inputTimeChanged = (ev: CustomEvent<{ datetime: Date }>) => {
     // 任意入力時刻が変更された場合に現在時刻を設定する.
@@ -50,7 +53,7 @@
       imageName = uploadImageToFirebase(imageObj);
     }
     const addedRecord = await addRecordToFirestore(
-      +recordType, // +演算子で数値的な文字列を数値に変換する.
+      recordType,
       comment,
       arbitraryTimeActive ? recordTime : null,
       imageName
@@ -88,7 +91,10 @@
       />
     </fieldset>
     <!-- 任意時刻入力ボックス -->
-    <ArbitraryTimeInput on:input-time-changed={inputTimeChanged} />
+    <ArbitraryTimeInput
+      on:input-time-changed={inputTimeChanged}
+      on:toggle-active={changeArbitTimeActiveState}
+    />
     <!-- <arbitrary-time-input-vue
       @input-time-changed="inputTimeChanged"
       @toggle-active="toggleArbitTimeActive"

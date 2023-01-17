@@ -36,3 +36,15 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+## 注意
+
+- 旧Tako Boardのリポジトリは[ここ](https://github.com/littleIkawa/tako_board_easy_app).
+Firebaseの設定は完全に同一.
+- `yarn create svelte`はNodeのバージョンが17.xでないと動かない.
+しかし, SveltekitはNodeバージョンが19.xでないと`yarn install`で弾かれる.
+そのため`nodenv`で上のディレクトリは`17.0.1`にし, このリポジトリのルートで`19.3.0`にしている.
+- `yarn install`で作られるデフォルト状態の`.prettierrc`で指定されたルールでは, スペースではなくタブを使うなど好きじゃないルールが多かった.
+そのため最初のコミットよりも前に, それらのルールを消去し, 全ファイルのタブ文字をスペース2個に置き換える作業をしている.
+- `vite.config.js`と`tsconfig.json`におけるエイリアス解決設定もデフォルトでは含まれていない.
+

@@ -8,8 +8,8 @@
   import SearchQueryMaker from "@/components/records/SearchQueryMaker.svelte";
   import RecordsList from "@/components/records/RecordsList.svelte";
 
-  let records: Record[] = [];
-  $: records = records;
+  let records: Record[];
+  $: records = [];
 
   // レコードリストを取得. クエリメーカーで作成されたクエリを渡してもらう.
   const acquireList = async (queries: QueryConstraint[]) => {

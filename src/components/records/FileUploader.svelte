@@ -52,8 +52,7 @@
     if (target.files === null) return;
     const uploadedFile = target.files[0];
     createImagePreview(uploadedFile);
-    dispatch("uploaded", uploadedFile);
-    // context.emit("uploaded", uploadedFile);
+    dispatch("uploaded", { file: uploadedFile });
   };
 </script>
 

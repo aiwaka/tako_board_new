@@ -19,7 +19,7 @@
     inputDate;
     inputTime;
     // console.log(getArbitTimeAsDate());
-    dispatch("input-time-changed", getArbitTimeAsDate());
+    dispatch("input-time-changed", { datetime: getArbitTimeAsDate() });
   }
 
   const getArbitTimeAsDate = () => {

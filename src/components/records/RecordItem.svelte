@@ -34,21 +34,16 @@
   <td class="date">{record.getDate()}</td>
   <td class="type">{record.getType()}</td>
   <td class="comment">
-    <button on:click={toggleShowComment}>
+    <button class="comment-column-button" on:click={toggleShowComment}>
+      {#if record.imageName}
+        <ModalWindow imageName={record.imageName}>■</ModalWindow>
+      {/if}
       {#if commentIsLong && !showWholeComment}
         {shortComment}
       {:else}
         {record.comment}
       {/if}
     </button>
-  </td>
-  <td class="image">
-    {#if record.imageName}
-      <p>
-        <ModalWindow imageName={record.imageName}>画像あり</ModalWindow>
-        <!-- <modal-window-vue :image-name="data.imageName">画像あり</modal-window-vue> -->
-      </p>
-    {/if}
   </td>
   <td class="button">
     <button disabled={deleteDisabled} on:click={deleteRecord}>x</button>
@@ -70,5 +65,9 @@
   tr.record > td.button {
     max-width: 10%;
     width: 3rem;
+  }
+  .comment-column-button {
+    border: none;
+    background: transparent;
   }
 </style>

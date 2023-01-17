@@ -2,27 +2,18 @@
   import { createEventDispatcher } from "svelte";
 
   $: uploadedImageUrl = "";
+  // アップロード状況を取得するための数値フィールドを持つオブジェクト
   export let uploadWatcher: { status: number };
 
   const dispatch = createEventDispatcher();
-
-  // emits: ["uploaded", "reset-finished"],
 
   $: {
     uploadWatcher;
   }
 
-  // watch(uploadWatcher, (status, prevStatus) => {
-  //   // statusが実行中から終了に変化したら画像を消去する.
-  //   if (prevStatus === 1 && status == 2) {
-  //     reset();
-  //   }
-  // });
-
   const reset = () => {
     uploadedImageUrl = "";
     dispatch("reset");
-    // context.emit("reset-finished");
   };
 
   // アップロードした画像を表示
@@ -53,6 +44,7 @@
     const uploadedFile = target.files[0];
     createImagePreview(uploadedFile);
     dispatch("uploaded", { file: uploadedFile });
+    dispatch("reset");
   };
 </script>
 
@@ -70,16 +62,6 @@
   {#if uploadedImageUrl !== ""}
     <img class="image-preview" src={uploadedImageUrl} alt="upload-preview" />
   {/if}
-
-  <!-- <div class="progress-container" v-if="uploadStatus == 1">
-      <div class="progress-bar-container">
-        <div
-          class="progress-bar"
-          :style="{ width: String(uploadProgress) + '%' }"
-        ></div>
-      </div>
-      <p>{{ uploadProgress }}%</p>
-    </div> -->
 </div>
 
 <style>
@@ -93,19 +75,4 @@
     border: 2px solid #777777;
     width: 13rem;
   }
-  /* .progress-container {
-    width: 25%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .progress-bar-container {
-    width: 70%;
-  }
-  .progress-bar {
-    width: 100%;
-    height: 0.3rem;
-    background-color: #42b983;
-    transition: 0.1s;
-  } */
 </style>

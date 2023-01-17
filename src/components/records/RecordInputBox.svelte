@@ -24,11 +24,9 @@
   const imageUploaded = (ev: CustomEvent<{ file: File }>) => {
     imageObj = ev.detail.file;
   };
-  const deleteImage = () => {
-    imageObj = null;
-  };
   const onUploaderReset = () => {
     uploadStatus.status = 0;
+    imageObj = null;
   };
 
   /**
@@ -95,21 +93,12 @@
       on:input-time-changed={inputTimeChanged}
       on:toggle-active={changeArbitTimeActiveState}
     />
-    <!-- <arbitrary-time-input-vue
-      @input-time-changed="inputTimeChanged"
-      @toggle-active="toggleArbitTimeActive"
-    /> -->
     <!-- 画像追加コンテナ -->
     <FileUploader
       uploadWatcher={uploadStatus}
       on:uploaded={imageUploaded}
       on:reset={onUploaderReset}
     />
-    <!-- <file-uploader-vue
-      :uploadWatcher="uploadStatus"
-      @uploaded="imageUploaded"
-      @reset-finished="onUploaderReset"
-    /> -->
   </div>
   <ArrowIcon active={!addButtonDisabled} />
   <div class="add-button-container">

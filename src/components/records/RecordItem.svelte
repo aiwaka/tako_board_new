@@ -34,7 +34,7 @@
   <td class="comment">
     <button class="comment-column-button" on:click={toggleShowComment}>
       {#if record.imageName}
-        <ModalWindow imageName={record.imageName}>■</ModalWindow>
+        <ModalWindow imageName={record.imageName}>画像</ModalWindow>
       {/if}
       {#if commentIsLong && !showWholeComment}
         {shortComment}

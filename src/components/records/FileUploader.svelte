@@ -71,6 +71,9 @@
     flex-direction: column;
     align-items: center;
   }
+  .image-uploader {
+    font-size: 0.9rem;
+  }
   .image-preview {
     border: 2px solid #777777;
     width: 13rem;

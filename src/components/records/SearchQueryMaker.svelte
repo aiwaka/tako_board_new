@@ -47,9 +47,7 @@
     startDate = event.detail.startDate;
     recordTypeChanged();
   };
-  const recordTypeChanged = () => {
-    fetchButtonDisabled = false;
-  };
+  const recordTypeChanged = () => (fetchButtonDisabled = false);
 </script>
 
 <!-- Firestore検索クエリを作成し取得ボタンを押したらコールバックに渡すコンポーネント -->

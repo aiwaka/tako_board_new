@@ -14,7 +14,9 @@
   // レコードリストを取得. クエリメーカーで作成されたクエリを渡してもらう.
   const acquireList = async (queries: QueryConstraint[]) => {
     records = [];
-    await getRecordsList(records, queries)();
+    await getRecordsList(records, queries);
+    // svelteのリアクティブ変数反映のための自己代入
+    records = records;
   };
 
   const addRecord = (ev: CustomEvent<{ record: Record }>) => {

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
   export let href: string;
-  export let height = "8rem";
-  export let mobileHeight = "3rem";
+  export let height = "5.5rem";
+  export let mobileHeight = "1.6rem";
   export let color = "var(--main-font-color)";
   export let hoverColor = "var(--page-link-hover-color)";
   export let currentPageColor = "var(--current-page-link-color)";
@@ -32,12 +32,12 @@
     transition: 0.25s ease-in-out;
     display: block;
     position: relative;
-    margin: 0 1rem;
-    font-size: 2rem;
+    margin: 0 0.7rem;
+    font-size: 1.6rem;
   }
   @media (max-width: 1024px) {
     .page-link {
-      font-size: 1.4rem;
+      font-size: 1rem;
     }
   }
 
@@ -48,7 +48,7 @@
   .page-link::before {
     content: "";
     width: 0;
-    height: 0.2rem;
+    height: 0.15rem;
     background: var(--hover-color);
     position: absolute;
     left: 50%;

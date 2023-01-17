@@ -35,16 +35,14 @@
 }
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 11rem;
+  scroll-padding-top: 6rem;
   -webkit-text-size-adjust: 100%;
   word-break: normal;
   -moz-tab-size: 4;
   tab-size: 4;
-  font-size: 62.5%; /* ルートのフォントサイズを10pxとしてremで指定できるようにする */
 }
 @media (max-width: 512px) {
   html {
-    font-size: 2.66vw; /* 10/375*100 */
     scroll-padding-top: 13rem;
   }
 }
@@ -54,11 +52,8 @@ body {
   min-height: 100vh;
   color: var(--main-font-color);
   background: var(--main-bg-color);
-  transition: color 0.5s, background-color 0.5s;
-  line-height: 1.6;
+  transition: color 1s ease-in-out, background-color 1s ease-in-out;
   font-family: "Noto Sans JP", sans-serif;
-  /* font-family: 'Noto Serif JP', serif; */
-  font-size: 1.5em; /* 14px. Chromeのバグ対策でここだけemを使うらしいがもう治ったかも */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -104,31 +99,24 @@ picture {
   max-width: 100%;
   display: block;
 }
+label,
 input,
 button,
 textarea,
 select {
   font: inherit;
+  background-color: var(--main-bg-color);
+  color: var(--main-font-color);
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: white;
+}
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background-color: white;
 }
 img:not([alt]) {
   filter: blur(10px);
 }
-
-code {
-  font-family: "Noto Sans Mono";
-  background-color: lightgray;
-  padding: 0 0.4rem;
-  border-radius: 3px;
-}
-pre > code {
-  background-color: transparent;
-}
-pre {
-  background-color: lightgray;
-  padding: 2rem 3rem;
-  border-radius: 10px;
-}
-
 #app {
   min-height: 100vh;
 }

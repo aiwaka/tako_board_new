@@ -36,7 +36,7 @@
     justify-content: space-between;
     flex-direction: row;
     width: 100%;
-    height: 8rem;
+    height: 5.5rem;
     position: fixed;
     left: 0;
     right: 0;
@@ -48,12 +48,12 @@
   @media (max-width: 1024px) {
     #website-header {
       flex-direction: column;
-      height: calc(8rem + 3rem);
+      height: calc(5.5rem + 1.6rem);
     }
   }
 
   .title-block {
-    margin: 0.2rem 2rem;
+    margin: 0.1rem 1.5rem;
     font-family: "Noto Serif JP", serif;
   }
   .title-block > a {
@@ -61,14 +61,14 @@
   }
   @media (max-width: 1024px) {
     .title-block {
-      margin: 0 2rem;
+      margin: 0 1.5rem;
     }
   }
   .site-icon {
-    height: 6rem;
-    width: 6rem;
+    height: 3.2rem;
+    width: 3.2rem;
     display: block;
-    margin: auto 1.1rem;
+    margin: auto 0.8rem;
     border-radius: 100%;
     border: 3px solid var(--sub-font-color);
     overflow: hidden;
@@ -80,28 +80,28 @@
   .title {
     display: block;
     color: var(--main-font-color);
-    font-size: 3.6rem;
-    line-height: 8rem;
+    font-size: 2.4rem;
+    line-height: 5.5rem;
     font-weight: bold;
   }
   @media (max-width: 1024px) {
     #website-header .title {
-      font-size: 2.2rem;
+      font-size: 1.8rem;
     }
   }
 
   nav .nav-link-wrapper {
     display: flex;
     justify-content: space-between;
-    margin: 0 1.4rem;
-    margin-right: 3.4rem;
+    margin: 0 1rem;
+    margin-right: 2.5rem;
     width: fit-content;
   }
   @media (max-width: 1024px) {
     nav .nav-link-wrapper {
       position: relative;
       bottom: 0;
-      height: 3rem;
+      height: 1.6rem;
     }
   }
 </style>

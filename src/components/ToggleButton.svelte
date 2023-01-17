@@ -13,11 +13,11 @@
 <style>
   .toggle-button {
     display: inline-block;
-    width: 2rem;
-    height: 2rem;
+    width: 1.2rem;
+    height: 1.2rem;
     background: transparent;
-    line-height: 1.8rem;
-    border: 1px solid #000;
+    line-height: 1rem;
+    border: 1px solid var(--main-font-color);
     cursor: pointer;
   }
 </style>

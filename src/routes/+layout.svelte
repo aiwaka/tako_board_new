@@ -24,8 +24,6 @@
   export let data: LayoutData;
 </script>
 
-<!-- <Analytics /> -->
-
 <svelte:head>
   <link rel="stylesheet" href={`${base}/style/main.css`} />
   <!-- ブログの個別ページでは別の画像や説明を設定するため除外する -->
@@ -57,13 +55,16 @@
 
 <style>
   .header-margin {
-    height: 13rem;
+    height: 6rem;
   }
   .body-container {
     margin: 1rem 10%;
   }
 
   @media (max-width: 1024px) {
+    .header-margin {
+      height: 8rem;
+    }
     .body-container {
       margin: 1rem 4%;
     }

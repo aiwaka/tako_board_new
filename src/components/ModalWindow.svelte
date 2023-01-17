@@ -62,9 +62,9 @@
     padding: 0;
   }
   .contents .close-button {
-    line-height: 1rem;
-    width: 1rem;
-    height: 1rem;
+    line-height: 1.4rem;
+    width: 1.6rem;
+    height: 1.6rem;
     background-color: #bbb;
     cursor: pointer;
   }

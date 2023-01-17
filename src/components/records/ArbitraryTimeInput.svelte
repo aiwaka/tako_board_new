@@ -23,7 +23,7 @@
   }
 
   const getArbitTimeAsDate = () => {
-    // 外部パッケージを用いて取得した日時を一つのDateオブジェクトにして返す.
+    // 指定された日時を一つのDateオブジェクトにして返す.
     const datetimeStr = `${inputDate} ${inputTime}`;
     return new Date(datetimeStr);
   };
@@ -35,20 +35,26 @@
   {#if !active}
     <span>任意の時刻を入力</span>
   {:else}
-    <label for="date-picker">日付</label>
-    <input id="date-picker" type="date" bind:value={inputDate} />
-    <label for="time-picker">時刻</label>
-    <input id="time-picker" type="time" bind:value={inputTime} />
+    <fieldset class="input-form">
+      <label for="date-picker">日付</label>
+      <input id="date-picker" type="date" bind:value={inputDate} />
+      <label for="time-picker">時刻</label>
+      <input id="time-picker" type="time" bind:value={inputTime} />
+    </fieldset>
   {/if}
 </div>
 
 <style>
   .arbitrary-time-input {
-    border: 1px solid #777;
+    border: 1px solid var(--main-font-color);
     margin: 0.6rem auto;
-    padding: 1rem 0.6rem;
+    padding: 0.8rem 0.7rem;
   }
-  span {
-    margin: 0 0.5rem;
+  .input-form {
+    border: none;
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 1rem;
+    column-gap: 0.8rem;
   }
 </style>

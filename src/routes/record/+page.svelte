@@ -48,6 +48,6 @@
 
 <style>
   .records-view {
-    margin: 0px max(2.6rem, 5%);
+    margin: 0px max(2rem, 5%);
   }
 </style>

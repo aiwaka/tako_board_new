@@ -30,9 +30,8 @@
   }
   .site-footer p {
     display: inline-block;
-    font-size: 1.3rem;
-    line-height: 14rem;
+    font-size: 1rem;
+    line-height: 8rem;
     color: var(--main-font-color);
-    padding: 0.2rem 1rem;
   }
 </style>

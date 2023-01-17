@@ -57,7 +57,7 @@
     );
     if (addedRecord) {
       // 送信がなされたら今送ったものをリストに追加し, 各フォームをリセットする.
-      dispatch("record-added", addedRecord);
+      dispatch("record-added", { addedRecord });
       // 入力後も任意時刻入力ボックスを閉じない. 連続して入力できるようにする.
       recordType = -1;
       comment = "";
@@ -127,16 +127,16 @@
   }
 
   .add-button-container {
-    margin: 0.5rem auto;
+    margin: 0.4rem auto;
   }
 
   fieldset.record-input {
     display: grid;
-    grid-template-rows: repeat(2, 2.8rem);
-    line-height: 2.8rem;
-    grid-template-columns: 6rem 1fr;
-    row-gap: 1.8rem;
-    column-gap: 1rem;
+    grid-template-rows: repeat(2, 2.1rem);
+    line-height: 2.1rem;
+    grid-template-columns: 4.8rem 1fr;
+    row-gap: 1.5rem;
+    column-gap: 0.8rem;
     padding: 1.2rem 1.5rem;
     border: none;
   }

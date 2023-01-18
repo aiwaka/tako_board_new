@@ -4,7 +4,7 @@
 
 <div class="home">
   <h1>Tako Board</h1>
-  <div class="version">Ver 0.7.0</div>
+  <div class="version">Ver 0.7.1</div>
   <p>ちゃこちゃんのお世話管理アプリ</p>
   <img alt="tako" src={`${base}/img/tako.png`} />
 </div>

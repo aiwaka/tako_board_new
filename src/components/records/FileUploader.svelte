@@ -2,14 +2,14 @@
   import { createEventDispatcher } from "svelte";
 
   $: uploadedImageUrl = "";
-  // アップロード状況を取得するための数値フィールドを持つオブジェクト
-  export let uploadWatcher: { status: number };
+  let fileList: FileList | null;
+  $: fileList = null;
+  // 親側からリセットするための関数
+  export const resetFileUploader = () => {
+    reset();
+  };
 
   const dispatch = createEventDispatcher();
-
-  $: {
-    uploadWatcher;
-  }
 
   const reset = () => {
     uploadedImageUrl = "";
@@ -31,6 +31,7 @@
     reader.onabort = () => {
       reader.abort();
       reset();
+      return;
     };
     if (file) {
       reader.readAsDataURL(file);
@@ -44,7 +45,6 @@
     const uploadedFile = target.files[0];
     createImagePreview(uploadedFile);
     dispatch("uploaded", { file: uploadedFile });
-    dispatch("reset");
   };
 </script>
 
@@ -54,6 +54,7 @@
     name="image-uploader"
     class="image-uploader"
     type="file"
+    bind:files={fileList}
     accept="image/*"
     on:change={onImageUpload}
   />

@@ -13,7 +13,6 @@
   $: imageObj = imageObj;
   $: recordTime = new Date();
   $: recordType = -1;
-  $: uploadStatus = { status: 0 };
 
   const dispatch = createEventDispatcher();
 
@@ -24,8 +23,9 @@
   const imageUploaded = (ev: CustomEvent<{ file: File }>) => {
     imageObj = ev.detail.file;
   };
+  // 画像アップローダーを親側からリセットするためにバインドする変数.
+  let resetFileUploader: () => void;
   const onUploaderReset = () => {
-    uploadStatus.status = 0;
     imageObj = null;
   };
 
@@ -45,7 +45,6 @@
    */
   const addRecord = async () => {
     // 画像がある場合は追加
-    uploadStatus.status = 1;
     let imageName = "";
     if (imageObj !== null) {
       imageName = uploadImageToFirebase(imageObj);
@@ -63,7 +62,7 @@
       recordType = -1;
       comment = "";
       imageObj = null;
-      uploadStatus.status = 2;
+      resetFileUploader();
     }
   };
 </script>
@@ -94,11 +93,7 @@
       on:toggle-active={changeArbitTimeActiveState}
     />
     <!-- 画像追加コンテナ -->
-    <FileUploader
-      uploadWatcher={uploadStatus}
-      on:uploaded={imageUploaded}
-      on:reset={onUploaderReset}
-    />
+    <FileUploader bind:resetFileUploader on:uploaded={imageUploaded} on:reset={onUploaderReset} />
   </div>
   <ArrowIcon active={!addButtonDisabled} />
   <div class="add-button-container">

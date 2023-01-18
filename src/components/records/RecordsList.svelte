@@ -20,19 +20,11 @@
 </script>
 
 {#if records.length !== 0}
-  <table class="record-table">
-    <tbody>
-      {#each records as record (record.id)}
-        <RecordItem {record} on:delete-record={deleteRecord} />
-      {/each}
-      <!-- <record-row-vue
-      v-for="record in records"
-      :key="record.id"
-      :data="record"
-      @delete-record="deleteRecord"
-    /> -->
-    </tbody>
-  </table>
+  <div class="record-table">
+    {#each records as record (record.id)}
+      <RecordItem {record} on:delete-record={deleteRecord} />
+    {/each}
+  </div>
 {:else}
   <div>
     <span>レコードがありません</span>
@@ -43,9 +35,13 @@
   .record-table {
     width: 90%;
     height: auto;
+    /* overflow-x: scroll; */
     margin: 0.4rem auto;
-    overflow-x: scroll;
-    border-collapse: separate;
-    border-spacing: 0px 30px;
+    display: grid;
+    grid-template-columns: repeat(4, auto) 2rem 2rem;
+    grid-auto-rows: 4rem;
+    place-items: center;
+    /* border-collapse: separate; */
+    /* border-spacing: 0px 30px; */
   }
 </style>

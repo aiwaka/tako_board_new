@@ -28,47 +28,56 @@
   const deleteRecord = () => dispatch("delete-record", { id: record.id });
 </script>
 
-<tr class="record">
-  <td class="who">{record.who}</td>
-  <td class="date">{record.getDate()}</td>
-  <td class="type">{record.getType()}</td>
-  <td class="image">
-    {#if record.imageName}
-      <ModalWindow imageName={record.imageName}><ImageIcon /></ModalWindow>
+<div class="who">{record.who}</div>
+<div class="date">{record.getDate()}</div>
+<div class="type">{record.getType()}</div>
+<div class="comment">
+  <button class="comment-column-button" on:click={toggleShowComment}>
+    {#if commentIsLong && !showWholeComment}
+      {shortComment}
+    {:else}
+      {record.comment}
     {/if}
-  </td>
-  <td class="comment">
-    <button class="comment-column-button" on:click={toggleShowComment}>
-      {#if commentIsLong && !showWholeComment}
-        {shortComment}
-      {:else}
-        {record.comment}
-      {/if}
-    </button>
-  </td>
-  <td class="delete-button">
-    <button disabled={deleteDisabled} on:click={deleteRecord}>x</button>
-  </td>
-</tr>
+  </button>
+</div>
+<div class="image">
+  {#if record.imageName}
+    <ModalWindow imageName={record.imageName}><ImageIcon /></ModalWindow>
+  {/if}
+</div>
+<div class="delete-button">
+  <button disabled={deleteDisabled} on:click={deleteRecord}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      style="width: 16px; height: 16px; opacity: 1;"
+      xml:space="preserve"
+    >
+      <g>
+        <polygon
+          points="512,52.535 459.467,0.002 256.002,203.462 52.538,0.002 0,52.535 203.47,256.005 0,459.465
+          52.533,511.998 256.002,308.527 459.467,511.998 512,459.475 308.536,256.005"
+          style={`fill: ${deleteDisabled ? "gray" : "var(--main-font-color)"};`}
+        />
+      </g>
+    </svg>
+  </button>
+</div>
 
 <style>
-  tr.record {
-    width: 100%;
-  }
-  tr.record > td {
-    width: 200px;
-    max-width: 22%;
-  }
-  tr.record > td.comment {
-    max-width: 35%;
-    width: 300px;
-  }
-  tr.record > td.delete-button {
-    max-width: 10%;
-    width: 3rem;
-  }
   .comment-column-button {
     border: none;
     background: transparent;
+  }
+  .delete-button {
+    margin: auto;
+    width: 1rem;
+    height: 1rem;
+  }
+  .delete-button > button {
+    width: 1rem;
+    height: 1rem;
+    /* border: 1px solid #888; */
+    border: none;
   }
 </style>

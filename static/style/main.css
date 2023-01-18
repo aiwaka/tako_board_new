@@ -111,6 +111,9 @@ select {
 button[disabled] {
   color: gray;
 }
+button:not([disabled]):hover {
+  background-color: gray;
+}
 input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: white;
 }

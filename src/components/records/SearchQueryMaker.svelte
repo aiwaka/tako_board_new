@@ -31,12 +31,17 @@
   const toggleActive = () => (active = !active);
 
   const fetch = async () => {
-    // 取得時期期間, 検索条件等を総合したクエリを作成し, propsで受け取っているコールバックに渡しながら実行
+    // 取得時期期間, 検索条件等を総合したクエリを作成し, 受け取っているコールバックに渡しながら実行する.
+    // 文字列をDateオブジェクトにすると9時になってしまうので, 時間を0にセットしている.
     // 降順の場合startとendが逆になる.
+    const startDate = new Date(startDateStr);
+    startDate.setHours(0);
+    const endDateTomorrow = new Date(endDateTomorrowStr);
+    endDateTomorrow.setHours(0);
     const queries: QueryConstraint[] = [
       orderBy("date", "desc"),
-      endAt(new Date(startDateStr)),
-      startAt(new Date(endDateTomorrowStr)),
+      endAt(startDate),
+      startAt(endDateTomorrow),
     ];
     if (recordType !== -1) {
       queries.push(where("type", "==", recordType));

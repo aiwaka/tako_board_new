@@ -22,7 +22,7 @@
 </script>
 
 <div class="modal-window">
-  <button type="button" on:click|preventDefault={openModal}>
+  <button on:click|preventDefault={openModal}>
     <slot />
   </button>
   {#if showContents}
@@ -48,6 +48,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  button {
+    border: none;
   }
 
   .contents {

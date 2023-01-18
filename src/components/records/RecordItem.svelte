@@ -3,6 +3,7 @@
   import type { Record } from "$lib/records";
   import ModalWindow from "@/components/ModalWindow.svelte";
   import { createEventDispatcher, onMount } from "svelte";
+  import ImageIcon from "../ImageIcon.svelte";
 
   $: deleteDisabled = true;
   $: showWholeComment = false;
@@ -31,11 +32,13 @@
   <td class="who">{record.who}</td>
   <td class="date">{record.getDate()}</td>
   <td class="type">{record.getType()}</td>
+  <td class="image">
+    {#if record.imageName}
+      <ModalWindow imageName={record.imageName}><ImageIcon /></ModalWindow>
+    {/if}
+  </td>
   <td class="comment">
     <button class="comment-column-button" on:click={toggleShowComment}>
-      {#if record.imageName}
-        <ModalWindow imageName={record.imageName}>画像</ModalWindow>
-      {/if}
       {#if commentIsLong && !showWholeComment}
         {shortComment}
       {:else}
@@ -43,7 +46,7 @@
       {/if}
     </button>
   </td>
-  <td class="button">
+  <td class="delete-button">
     <button disabled={deleteDisabled} on:click={deleteRecord}>x</button>
   </td>
 </tr>
@@ -60,7 +63,7 @@
     max-width: 35%;
     width: 300px;
   }
-  tr.record > td.button {
+  tr.record > td.delete-button {
     max-width: 10%;
     width: 3rem;
   }

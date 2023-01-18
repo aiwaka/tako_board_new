@@ -57,6 +57,11 @@
 
 <style>
   .records-view {
-    margin: 0px max(2rem, 5%);
+    margin: 0px 6rem;
+  }
+  @media (max-width: 1024px) {
+    .records-view {
+      margin: 0px 2%;
+    }
   }
 </style>

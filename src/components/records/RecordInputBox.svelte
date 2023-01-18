@@ -125,28 +125,26 @@
     margin: 0.4rem auto;
   }
 
-  fieldset.record-input {
+  .record-input {
     display: grid;
     grid-template-rows: repeat(2, 2.1rem);
     line-height: 2.1rem;
     grid-template-columns: 4.8rem 1fr;
-    row-gap: 1.5rem;
-    column-gap: 0.8rem;
+    row-gap: 1.2rem;
     padding: 1.2rem 1.5rem;
     border: none;
   }
-  fieldset.record-input input {
+  .record-input input {
     color: inherit;
     border: 1px solid #777;
     transition: ease-in-out 0.2s;
   }
-  fieldset.record-input input:focus {
+  .record-input input:focus {
     outline-width: 0;
     border-radius: 5px;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(128, 128, 128, 0.4);
   }
-
-  fieldset.record-input select {
+  .record-input select {
     border: 1px solid #777;
     transition: ease-in-out 0.2s;
   }

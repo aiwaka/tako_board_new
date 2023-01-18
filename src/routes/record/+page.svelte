@@ -7,9 +7,21 @@
   import RecordInputBox from "@/components/records/RecordInputBox.svelte";
   import SearchQueryMaker from "@/components/records/SearchQueryMaker.svelte";
   import RecordsList from "@/components/records/RecordsList.svelte";
+  import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
+  import { getCurrentUser } from "@/settings/firebase";
 
   let records: Record[];
   $: records = [];
+
+  // ここでページ遷移ガードをしている.
+  // NOTE: 他の方法がないか探す
+  onMount(async () => {
+    const user = await getCurrentUser();
+    if (!user) {
+      goto("/login?redirect=record");
+    }
+  });
 
   // レコードリストを取得. クエリメーカーで作成されたクエリを渡してもらう.
   const acquireList = async (queries: QueryConstraint[]) => {
@@ -37,7 +49,6 @@
   <RecordInputBox on:record-added={addRecord} />
   <h4>検索</h4>
   <SearchQueryMaker fetchCallback={acquireList} />
-  <!-- <query-maker :fetch-callback="acquireList" /> -->
   <h4>レコードリスト</h4>
   <div class="record-list-container">
     <RecordsList {records} on:delete-record={deleteRecord} />

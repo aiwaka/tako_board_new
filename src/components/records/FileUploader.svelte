@@ -49,16 +49,14 @@
 </script>
 
 <div class="image-uploader-container">
-  <div>
-    <label for="image-uploader">添付画像</label>
-    <input
-      name="image-uploader"
-      class="image-uploader"
-      type="file"
-      accept="image/*"
-      on:change={onImageUpload}
-    />
-  </div>
+  <label for="image-uploader">添付画像</label>
+  <input
+    name="image-uploader"
+    class="image-uploader"
+    type="file"
+    accept="image/*"
+    on:change={onImageUpload}
+  />
   {#if uploadedImageUrl !== ""}
     <img class="image-preview" src={uploadedImageUrl} alt="upload-preview" />
   {/if}
@@ -69,6 +67,7 @@
     margin: 0.2rem auto;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
   }
   .image-uploader {

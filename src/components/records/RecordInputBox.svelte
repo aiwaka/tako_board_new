@@ -129,8 +129,9 @@
     display: grid;
     grid-template-rows: repeat(2, 2.1rem);
     line-height: 2.1rem;
-    grid-template-columns: 4.8rem 1fr;
+    grid-template-columns: 4.8rem 9rem;
     row-gap: 1.2rem;
+    column-gap: 1rem;
     padding: 1.2rem 1.5rem;
     border: none;
   }

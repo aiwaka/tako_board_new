@@ -37,7 +37,7 @@
 <img alt="ログイン画面" src="https://user-images.githubusercontent.com/38373453/215893172-bbc2556d-c915-4fe5-9d14-9c93a8400737.jpg" width="45%">
 <img alt="入力" src="https://user-images.githubusercontent.com/38373453/215893168-166e62e4-692b-4284-932c-75308566b479.PNG" width="45%">
 <img alt="レコードリスト" src="https://user-images.githubusercontent.com/38373453/215893163-5ac237cc-5497-462a-be8a-708d92edae8c.jpg" width="45%">
-<p/>
+</p>
 
 ## 使用技術
 

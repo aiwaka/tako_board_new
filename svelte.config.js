@@ -13,7 +13,7 @@ const config = {
     adapter: staticAdapter({
       fallback: null,
       pages: "dist",
-      precompress: true,
+      precompress: false,
     }),
   },
 };

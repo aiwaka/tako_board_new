@@ -27,10 +27,7 @@
   </div>
 {:else}
   <div>
-    <!-- 一応/record/[id] ルートに向かえるように作ったリンクだが結局うまく動かなかった -->
-    <a href="/record/noid">
-      <span>レコードがありません</span>
-    </a>
+    <span>レコードがありません</span>
   </div>
 {/if}
 

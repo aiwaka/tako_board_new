@@ -11,7 +11,8 @@ const config = {
   kit: {
     // adapter: adapter(),
     adapter: staticAdapter({
-      fallback: null,
+      // NOTE: index.html以外の名前だと怪しいかもしれない、要検証
+      fallback: "index.html",
       pages: "dist",
       precompress: false,
     }),

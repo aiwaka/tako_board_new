@@ -28,7 +28,11 @@
   const deleteRecord = () => dispatch("delete-record", { id: record.id });
 </script>
 
-<div class="who">{record.who}</div>
+<div class="who">
+  <a href={`/record/${record.id}`}>
+    {record.who}
+  </a>
+</div>
 <div class="date">{record.getDate()}</div>
 <div class="type">{record.getType()}</div>
 <div class="comment">

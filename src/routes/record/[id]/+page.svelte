@@ -29,16 +29,23 @@
 
 {#if record !== null}
   <div class="info-container">
+    <div class="grid-line" />
     <div class="who label">投稿者</div>
     <div class="who content">{record.who}</div>
-    <div class="view-date label">時刻</div>
-    <div class="view-date content">{record.getDate()}</div>
+    <div class="grid-line" />
+    <div class="display-date label">時刻</div>
+    <div class="display-date content">{record.getDate()}</div>
+    <div class="grid-line" />
+    <!-- TODO: データに実際の入力時刻をもたせる -->
     <div class="true-date label">入力時刻</div>
     <div class="true-date content">{record.getDate()}</div>
+    <div class="grid-line" />
     <div class="type label">お世話の種類</div>
-    <div class="type content">{record.getType()}</div>
+    <div class="type content">{record.getFullType()}</div>
+    <div class="grid-line" />
     <div class="comment label">コメント</div>
     <div class="comment content">{record.comment}</div>
+    <div class="grid-line" />
     <div class="image">
       {#if imageURL !== null}
         <img class="image" src={imageURL} alt="レコードの添付画像" />
@@ -57,7 +64,27 @@
     column-gap: 1.8rem;
     row-gap: 0.8rem;
   }
+  .label {
+    color: #777;
+    font-size: 0.85rem;
+  }
+  .grid-line {
+    grid-column: 1 / 3;
+    height: 1px;
+    border-top: 1px solid #bbb;
+  }
   .image {
     grid-column: 1 / 3;
+  }
+  @media (max-width: 1024px) {
+    .info-container {
+      grid-template-columns: 1fr;
+    }
+    .grid-line {
+      grid-column: 1 / 2;
+    }
+    .image {
+      grid-column: 1 / 2;
+    }
   }
 </style>

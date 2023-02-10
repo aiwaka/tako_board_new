@@ -62,8 +62,12 @@
     row-gap: 0.8rem;
   }
   .label {
+    padding-left: 0.7rem;
     color: #777;
     font-size: 0.85rem;
+  }
+  .content {
+    padding-left: 0.8rem;
   }
   .grid-line {
     grid-column: 1 / 3;

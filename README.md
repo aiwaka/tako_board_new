@@ -1,6 +1,6 @@
 # Tako Board (New)
 
-バージョン0.7.0
+バージョン0.7.5
 
 ## 概要
 
@@ -20,6 +20,7 @@
 - Firebase の API の FirestoreDataConverter を使用することでデータの型付けを得, 可読性・保守性を向上.
 - 入力からFirestoreの検索クエリを作成しリストを取得する形式に変更（v0.3.3）.
 - UIを刷新. 使用フレームワークをVue.jsからSvelteに変更（v0.7.0）.
+- 個別にレコードの詳細を表示できるページを用意. 一覧において簡易的な表示だった文字列はここではすべて完全な形になる. 入力した正確な時刻を表示する機能も実装予定.
 
 ## 画像（旧バージョン）
 
@@ -37,6 +38,7 @@
 <img alt="ログイン画面" src="https://user-images.githubusercontent.com/38373453/215893172-bbc2556d-c915-4fe5-9d14-9c93a8400737.jpg" width="45%">
 <img alt="入力" src="https://user-images.githubusercontent.com/38373453/215893168-166e62e4-692b-4284-932c-75308566b479.PNG" width="45%">
 <img alt="レコードリスト" src="https://user-images.githubusercontent.com/38373453/215893163-5ac237cc-5497-462a-be8a-708d92edae8c.jpg" width="45%">
+<img alt="個別レコードページ" src="https://user-images.githubusercontent.com/38373453/218102904-304b70df-726d-42ef-a7af-2deaabf35889.jpg" width="45%">
 </p>
 
 ## 使用技術
@@ -78,3 +80,4 @@ Firebaseの設定は完全に同一.
 - 2022/08/08：デザインを大幅に変更し、v0.4.0を公開。
 - 2023/01/18：UIを刷新。機能は変わっていないが、開発に用いたフレームワークも変更した（Vue.jsからSvelte）。シングルページアプリケーションではなくなり、CSSフレームワークの使用をやめた（v0.7.0とする）。
 - 2023/01/19：ファイルアップローダーの不具合を修正（v0.7.1）。
+- 2023/02/10：レコード個別のページを作成。少しパフォーマンスの改善（v0.7.5）。

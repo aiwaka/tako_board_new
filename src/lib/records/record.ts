@@ -52,4 +52,10 @@ export class Record {
     }
     return recordTypeStrList[this.type];
   }
+  /**
+   * 完全な名前のタイプを取得
+   */
+  public getFullType(): string {
+    return recordTypeStrList[this.type];
+  }
 }

@@ -6,7 +6,7 @@
   export let data: PageData;
 
   const getTargetRecord = async () => {
-    const result = await getRecord(data.id);
+    const result = await getRecord(data.userId, data.recordId);
     if (!result) {
       throw new Error("データを読み込めませんでした。");
     }

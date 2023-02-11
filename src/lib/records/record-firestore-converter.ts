@@ -9,6 +9,7 @@ export const recordConverter = {
       comment: record.comment,
       name: record.who,
       date: record.date,
+      actualDate: record.actualDate,
       imageName: record.imageName,
     };
   },
@@ -20,6 +21,8 @@ export const recordConverter = {
       data.name,
       data.type,
       data.date,
+      // actualDateが存在しない場合は表示時刻をそれとして扱う.
+      data.actualDate === undefined ? data.date : data.actualDate,
       data.comment,
       // imageNameは後から追加した属性なので, undefinedである可能性がある.
       data.imageName === undefined ? null : data.imageName

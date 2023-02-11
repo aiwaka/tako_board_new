@@ -18,11 +18,16 @@ export class Record {
     public who: string,
     public type: number,
     public date: Timestamp,
+    public actualDate: Timestamp,
     public comment: string,
     public imageName: string | null = null
   ) {}
-  public getDate(): string {
-    const dateObj: Date = this.date.toDate();
+  /**
+   * `display`なら表示時刻, `actual`なら実際の入力時刻を整形して取得する.
+   * @param flag `display`か`actual`のいずれか.
+   */
+  private getEitherDate(flag: "display" | "actual"): string {
+    const dateObj: Date = flag === "display" ? this.date.toDate() : this.actualDate.toDate();
     const month = dateObj.getMonth() + 1; // getMonthは0始まり
     const date = dateObj.getDate();
     const hour = dateObj.getHours();
@@ -31,12 +36,17 @@ export class Record {
     const minuteStr = minute.toString().padStart(2, "0");
     return `${month}/${date} ${hourStr}:${minuteStr}`;
   }
-  public getTime(): string {
-    const dateObj = this.date.toDate();
-    const hour = dateObj.getHours();
-    const minute = dateObj.getMinutes();
-    // const second = dateObj.getSeconds();
-    return `${hour}時${minute}分`;
+  /**
+   * 表示時刻を整形して返す
+   */
+  public getDate(): string {
+    return this.getEitherDate("display");
+  }
+  /**
+   * 実際の入力時刻を整形して返す
+   */
+  public getActualDate(): string {
+    return this.getEitherDate("actual");
   }
   public getType(): string {
     // コメントのみは表示しないことにする.

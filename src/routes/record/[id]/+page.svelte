@@ -25,9 +25,8 @@
     <div class="display-date label">時刻</div>
     <div class="display-date content">{record.getDate()}</div>
     <div class="grid-line" />
-    <!-- TODO: データに実際の入力時刻をもたせる -->
-    <div class="true-date label">入力時刻（試験機能）</div>
-    <div class="true-date content">{record.getDate()}</div>
+    <div class="true-date label">入力時刻</div>
+    <div class="true-date content">{record.getActualDate()}</div>
     <div class="grid-line" />
     <div class="type label">お世話の種類</div>
     <div class="type content">{record.getFullType()}</div>

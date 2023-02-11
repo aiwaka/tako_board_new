@@ -29,7 +29,8 @@
 </script>
 
 <div class="who">
-  <a href={`/record/${record.id}`}>
+  <!-- TODO: ユーザーIDを見るのは容易ではあるがリンクに含めるのも変な気がする. 他のやり方を考える. -->
+  <a href={`/record/${record.userId}-${record.id}`}>
     {record.who}
   </a>
 </div>

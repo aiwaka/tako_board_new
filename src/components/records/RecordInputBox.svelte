@@ -16,9 +16,10 @@
 
   const dispatch = createEventDispatcher();
 
-  // emits: ["record-added"],
-
-  $: addButtonDisabled = recordType === -1 || (recordType === 0 && comment === "");
+  $: addButtonDisabled =
+    recordType === -1 ||
+    (recordType === 0 && comment === "") ||
+    (recordType === 8 && comment === "");
 
   const imageUploaded = (ev: CustomEvent<{ file: File }>) => {
     imageObj = ev.detail.file;

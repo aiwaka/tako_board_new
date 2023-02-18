@@ -8,21 +8,24 @@ export const addRecordToFirestore = async (
   comment: string,
   inputTime: Date | null = null,
   imageName = ""
-): Promise<Record | null> => {
+): Promise<Record> => {
   if (type === -1) {
-    alert("レコードタイプを選んでください.");
-    return null;
+    throw new Error("レコードタイプを選んでください.");
   } else if (type === 0 && comment === "") {
-    alert("コメントのみを送る場合はコメントが必須です。");
+    throw new Error("コメントのみを送る場合はコメントが必須です。");
+  } else if (type === 8 && comment === "") {
+    throw new Error("病院に行った記録にはコメントが必須です。");
   }
   const user = await getCurrentUser();
   const uid = user?.uid;
   if (!uid) {
-    return null;
+    throw new Error("ユーザー認証がありません。");
   }
   const recordsRef = doc(db, "users", uid);
   const userSnap = await getDoc(recordsRef);
-  if (!userSnap.exists()) return null;
+  if (!userSnap.exists()) {
+    throw new Error("ユーザーが不正です。");
+  }
   const userName: string = userSnap.data().name;
   const newRecordRef = doc(collection(recordsRef, "records").withConverter(recordConverter));
   const actualTime = Timestamp.now();

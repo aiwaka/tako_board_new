@@ -11,7 +11,13 @@
   const deleteRecord = async (ev: CustomEvent<{ id: string }>) => {
     const id = ev.detail.id;
     if (confirm("削除しますか？")) {
-      await deleteRecordFromFirestore(id);
+      try {
+        await deleteRecordFromFirestore(id);
+      } catch (error) {
+        console.error(error);
+        alert("エラーが発生しました。\n" + error);
+        return;
+      }
       const index = records.findIndex((rec) => rec.id === id);
       if (index !== -1) {
         dispatch("delete-record", { index });

@@ -29,7 +29,12 @@
   // レコードリストを取得. クエリメーカーで作成されたクエリを渡してもらう.
   const acquireList = async (queries: QueryConstraint[]) => {
     records = [];
-    await getRecordsList(records, queries);
+    try {
+      await getRecordsList(records, queries);
+    } catch (error) {
+      console.log(error);
+      alert("エラーが発生しました。\n" + error);
+    }
     // svelteのリアクティブ変数反映のための自己代入
     records = records;
   };

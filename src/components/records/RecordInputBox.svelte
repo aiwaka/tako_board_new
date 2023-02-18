@@ -44,26 +44,30 @@
   /**
    * このアプリの中核となる部分. 現在の入力状態を使ってレコードを追加する.
    */
-  const addRecord = async () => {
+  const addRecord = async (): Promise<void> => {
     // 画像がある場合は追加
     let imageName = "";
     if (imageObj !== null) {
       imageName = uploadImageToFirebase(imageObj);
     }
-    const addedRecord = await addRecordToFirestore(
-      recordType,
-      comment,
-      arbitraryTimeActive ? recordTime : null,
-      imageName
-    );
-    if (addedRecord) {
+    try {
+      const addedRecord = await addRecordToFirestore(
+        recordType,
+        comment,
+        arbitraryTimeActive ? recordTime : null,
+        imageName
+      );
       // 送信がなされたら今送ったものをリストに追加し, 各フォームをリセットする.
       dispatch("record-added", { addedRecord });
-      // 入力後も任意時刻入力ボックスを閉じない. 連続して入力できるようにする.
+      // 入力後も任意時刻入力ボックスだけは閉じない. 連続して入力できるようにする.
       recordType = -1;
       comment = "";
       imageObj = null;
       resetFileUploader();
+    } catch (error) {
+      console.log(error);
+      alert(error);
+      return;
     }
   };
 </script>

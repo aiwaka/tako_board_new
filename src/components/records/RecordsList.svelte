@@ -4,6 +4,7 @@
   import { createEventDispatcher } from "svelte";
 
   export let records: Record[];
+  export let currentUserId: string;
 
   const dispatch = createEventDispatcher<{ "delete-record": { index: number } }>();
 
@@ -22,7 +23,7 @@
 {#if records.length !== 0}
   <div class="record-table">
     {#each records as record (record.id)}
-      <RecordItem {record} on:delete-record={deleteRecord} />
+      <RecordItem {record} {currentUserId} on:delete-record={deleteRecord} />
     {/each}
   </div>
 {:else}

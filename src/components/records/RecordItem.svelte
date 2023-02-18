@@ -1,26 +1,18 @@
 <script lang="ts">
-  import { getCurrentUser } from "@/settings/firebase";
   import type { Record } from "$lib/records";
   import ModalWindow from "@/components/ModalWindow.svelte";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import ImageIcon from "../ImageIcon.svelte";
 
-  $: deleteDisabled = true;
-  $: showWholeComment = false;
   export let record: Record;
+  export let currentUserId: string;
 
+  $: deleteDisabled = currentUserId !== record.userId;
+  $: showWholeComment = false;
 
   const dispatch = createEventDispatcher<{ "delete-record": { id: string } }>();
 
   const OMIT_THRESHOLD = 8; // コメント文字列を省略する文字数の閾値
-
-  onMount(async () => {
-    const user = await getCurrentUser();
-    const uid = user?.uid;
-    if (uid) {
-      deleteDisabled = uid !== record.userId;
-    }
-  });
 
   $: commentIsLong = record.comment.length > OMIT_THRESHOLD;
   $: shortComment = record.comment.substring(0, OMIT_THRESHOLD) + "...";

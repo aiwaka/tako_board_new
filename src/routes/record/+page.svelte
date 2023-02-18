@@ -13,6 +13,7 @@
 
   let records: Record[];
   $: records = [];
+  let currentUserId = "";
 
   // ここでページ遷移ガードをしている.
   // NOTE: 他の方法がないか探す
@@ -20,6 +21,8 @@
     const user = await getCurrentUser();
     if (!user) {
       goto("/login?redirect=record");
+    } else {
+      currentUserId = user.uid;
     }
   });
 
@@ -51,7 +54,7 @@
   <SearchQueryMaker fetchCallback={acquireList} />
   <h4>レコードリスト</h4>
   <div class="record-list-container">
-    <RecordsList {records} on:delete-record={deleteRecord} />
+    <RecordsList {records} {currentUserId} on:delete-record={deleteRecord} />
   </div>
 </div>
 

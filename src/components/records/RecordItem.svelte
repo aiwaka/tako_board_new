@@ -27,7 +27,7 @@
     {record.who}
   </a>
 </div>
-<div class="date">{record.getDate()}</div>
+<div class="date">{record.getDisplayDate()}</div>
 <div class="type">{record.getType()}</div>
 <div class="comment">
   <button class="comment-column-button" on:click={toggleShowComment}>

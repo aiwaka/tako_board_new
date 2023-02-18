@@ -27,7 +27,7 @@ export class Record {
    * `display`なら表示時刻, `actual`なら実際の入力時刻を整形して取得する.
    * @param flag `display`か`actual`のいずれか.
    */
-  private getEitherDate(flag: "display" | "actual"): string {
+  private getDate(flag: "display" | "actual"): string {
     const dateObj: Date = flag === "display" ? this.date.toDate() : this.actualDate.toDate();
     const month = dateObj.getMonth() + 1; // getMonthは0始まり
     const date = dateObj.getDate();
@@ -40,14 +40,14 @@ export class Record {
   /**
    * 表示時刻を整形して返す
    */
-  public getDate(): string {
-    return this.getEitherDate("display");
+  public getDisplayDate(): string {
+    return this.getDate("display");
   }
   /**
    * 実際の入力時刻を整形して返す
    */
   public getActualDate(): string {
-    return this.getEitherDate("actual");
+    return this.getDate("actual");
   }
   public getType(): string {
     // コメントのみは表示しないことにする.

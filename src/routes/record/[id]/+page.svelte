@@ -23,7 +23,7 @@
     <div class="who content">{record.who}</div>
     <div class="grid-line" />
     <div class="display-date label">時刻</div>
-    <div class="display-date content">{record.getDate()}</div>
+    <div class="display-date content">{record.getDisplayDate()}</div>
     <div class="grid-line" />
     <div class="true-date label">入力時刻</div>
     <div class="true-date content">{record.getActualDate()}</div>

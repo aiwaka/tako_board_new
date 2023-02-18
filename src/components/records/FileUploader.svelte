@@ -9,7 +9,7 @@
     reset();
   };
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{ reset: null; uploaded: { file: File } }>();
 
   const reset = () => {
     uploadedImageUrl = "";

@@ -9,7 +9,8 @@
   $: showWholeComment = false;
   export let record: Record;
 
-  const dispatch = createEventDispatcher();
+
+  const dispatch = createEventDispatcher<{ "delete-record": { id: string } }>();
 
   const OMIT_THRESHOLD = 8; // コメント文字列を省略する文字数の閾値
 

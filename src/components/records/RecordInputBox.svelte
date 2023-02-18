@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { recordTypeStrList, addRecordToFirestore } from "$lib/records";
+  import { recordTypeStrList, addRecordToFirestore, Record } from "$lib/records";
   import { uploadImageToFirebase } from "$lib/records/image";
   import { createEventDispatcher } from "svelte";
 
@@ -14,7 +14,7 @@
   $: recordTime = new Date();
   $: recordType = -1;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{ "record-added": { addedRecord: Record } }>();
 
   $: addButtonDisabled =
     recordType === -1 ||

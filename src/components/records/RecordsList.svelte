@@ -5,7 +5,7 @@
 
   export let records: Record[];
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{ "delete-record": { index: number } }>();
 
   const deleteRecord = async (ev: CustomEvent<{ id: string }>) => {
     const id = ev.detail.id;

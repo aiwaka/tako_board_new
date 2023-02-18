@@ -4,13 +4,20 @@
   import { createEventDispatcher } from "svelte";
 
   export let records: Record[];
+  export let currentUserId: string;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{ "delete-record": { index: number } }>();
 
   const deleteRecord = async (ev: CustomEvent<{ id: string }>) => {
     const id = ev.detail.id;
     if (confirm("削除しますか？")) {
-      await deleteRecordFromFirestore(id);
+      try {
+        await deleteRecordFromFirestore(id);
+      } catch (error) {
+        console.error(error);
+        alert("エラーが発生しました。\n" + error);
+        return;
+      }
       const index = records.findIndex((rec) => rec.id === id);
       if (index !== -1) {
         dispatch("delete-record", { index });
@@ -22,7 +29,7 @@
 {#if records.length !== 0}
   <div class="record-table">
     {#each records as record (record.id)}
-      <RecordItem {record} on:delete-record={deleteRecord} />
+      <RecordItem {record} {currentUserId} on:delete-record={deleteRecord} />
     {/each}
   </div>
 {:else}

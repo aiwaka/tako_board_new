@@ -10,7 +10,10 @@
   $: inputDate = toDateString(currentDatetime);
   $: inputTime = toTimeString(currentDatetime);
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    "toggle-active": { active: boolean };
+    "input-time-changed": { datetime: Date };
+  }>();
 
   const toggleActive = () => {
     active = !active;

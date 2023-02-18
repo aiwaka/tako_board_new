@@ -1,20 +1,12 @@
 <script lang="ts">
-  import { getRecord } from "@/lib/records/get-record";
-  import { getImageURL } from "@/lib/records/image";
+  import { getOneRecord } from "$lib/records";
+  import { getImageURL } from "$lib/records/image";
   import type { PageData } from "./$types";
 
   export let data: PageData;
-
-  const getTargetRecord = async () => {
-    const result = await getRecord(data.userId, data.recordId);
-    if (!result) {
-      throw new Error("データを読み込めませんでした。");
-    }
-    return result;
-  };
 </script>
 
-{#await getTargetRecord()}
+{#await getOneRecord(data.userId, data.recordId)}
   <p>Loading...</p>
 {:then record}
   <div class="info-container">
@@ -23,7 +15,7 @@
     <div class="who content">{record.who}</div>
     <div class="grid-line" />
     <div class="display-date label">時刻</div>
-    <div class="display-date content">{record.getDate()}</div>
+    <div class="display-date content">{record.getDisplayDate()}</div>
     <div class="grid-line" />
     <div class="true-date label">入力時刻</div>
     <div class="true-date content">{record.getActualDate()}</div>

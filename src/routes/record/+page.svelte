@@ -13,6 +13,7 @@
 
   let records: Record[];
   $: records = [];
+  let currentUserId = "";
 
   // ここでページ遷移ガードをしている.
   // NOTE: 他の方法がないか探す
@@ -20,13 +21,20 @@
     const user = await getCurrentUser();
     if (!user) {
       goto("/login?redirect=record");
+    } else {
+      currentUserId = user.uid;
     }
   });
 
   // レコードリストを取得. クエリメーカーで作成されたクエリを渡してもらう.
   const acquireList = async (queries: QueryConstraint[]) => {
     records = [];
-    await getRecordsList(records, queries);
+    try {
+      await getRecordsList(records, queries);
+    } catch (error) {
+      console.log(error);
+      alert("エラーが発生しました。\n" + error);
+    }
     // svelteのリアクティブ変数反映のための自己代入
     records = records;
   };
@@ -51,7 +59,7 @@
   <SearchQueryMaker fetchCallback={acquireList} />
   <h4>レコードリスト</h4>
   <div class="record-list-container">
-    <RecordsList {records} on:delete-record={deleteRecord} />
+    <RecordsList {records} {currentUserId} on:delete-record={deleteRecord} />
   </div>
 </div>
 

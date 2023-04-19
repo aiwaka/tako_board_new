@@ -32,7 +32,7 @@
   <meta property="og:title" content="Tako Board" />
   <meta property="og:description" content="うさぎのお世話掲示板" />
   <meta property="og:site_name" content="Tako Board" />
-  <meta property="og:image" content="TODO:" />
+  <meta property="og:image" content="https://tako-board-1.web.app/img/logo.png" />
   <meta name="twitter:card" content="summary" />
 </svelte:head>
 

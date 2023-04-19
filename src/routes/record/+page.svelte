@@ -16,7 +16,6 @@
   let currentUserId = "";
 
   // ここでページ遷移ガードをしている.
-  // NOTE: 他の方法がないか探す
   onMount(async () => {
     const user = await getCurrentUser();
     if (!user) {

@@ -26,16 +26,14 @@
 
 <svelte:head>
   <link rel="stylesheet" href={`${base}/style/main.css`} />
-  <!-- ブログの個別ページでは別の画像や説明を設定するため除外する -->
-  {#if $page.route.id !== `/blog/[slug]`}
-    <meta property="og:url" content={ogp.url} />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="" />
-    <meta property="og:description" content="" />
-    <meta property="og:site_name" content="KULMC Website" />
-    <meta property="og:image" content="TODO:" />
-    <meta name="twitter:card" content="summary" />
-  {/if}
+  <title>Tako Board</title>
+  <meta property="og:url" content={ogp.url} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Tako Board" />
+  <meta property="og:description" content="うさぎのお世話掲示板" />
+  <meta property="og:site_name" content="Tako Board" />
+  <meta property="og:image" content="https://tako-board-1.web.app/img/logo.png" />
+  <meta name="twitter:card" content="summary" />
 </svelte:head>
 
 <SiteHeader navLinkList={pageList} />

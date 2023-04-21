@@ -12,10 +12,10 @@ export const deleteRecordFromFirestore = async (recordId: string): Promise<void>
   const record = await getDoc(doc(db, "users", uid, "records", recordId));
   const imageName = record.data()?.imageName;
   try {
+    await deleteDoc(doc(db, "users", uid, "records", recordId));
     if (imageName) {
       await deleteImageFromFirebase(imageName);
     }
-    await deleteDoc(doc(db, "users", uid, "records", recordId));
   } catch (e) {
     console.log(e);
     return;

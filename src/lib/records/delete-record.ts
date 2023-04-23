@@ -11,9 +11,13 @@ export const deleteRecordFromFirestore = async (recordId: string): Promise<void>
   }
   const record = await getDoc(doc(db, "users", uid, "records", recordId));
   const imageName = record.data()?.imageName;
-  if (imageName) {
-    await deleteImageFromFirebase(imageName);
+  try {
+    await deleteDoc(doc(db, "users", uid, "records", recordId));
+    if (imageName) {
+      await deleteImageFromFirebase(imageName);
+    }
+  } catch (e) {
+    console.log(e);
+    return;
   }
-  // TODO: 画像消去後にドキュメント消去に失敗すると画像データだけ消えてしまう可能性がある. 先にドキュメントを消すべきかも
-  await deleteDoc(doc(db, "users", uid, "records", recordId));
 };

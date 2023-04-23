@@ -101,6 +101,9 @@
   }
   .search-execute {
     margin-top: 0.6rem;
+    padding: 0.1rem 0.1rem;
+    border: 2px solid #777;
+    border-radius: 4px;
   }
   .date-selector {
     display: flex;

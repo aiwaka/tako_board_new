@@ -124,6 +124,11 @@
   .add-button-container {
     margin: 0.4rem auto;
   }
+  .add-button {
+    padding: 0.1rem 0.1rem;
+    border: 2px solid #777;
+    border-radius: 4px;
+  }
 
   .record-input {
     display: grid;

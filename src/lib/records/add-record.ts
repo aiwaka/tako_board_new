@@ -34,6 +34,7 @@ export const addRecordToFirestore = async (
 
   // refを作成した時点でidは生成されているのでそれを使う.
   const newRecordData = new Record(
+    1,
     newRecordRef.id,
     uid,
     userName,

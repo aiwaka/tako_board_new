@@ -6,6 +6,14 @@
 </script>
 
 <div class="type-tag">
-  {name}
+  <span>
+    {name}
+  </span>
   <CrossIcon disabled={true} />
 </div>
+
+<style>
+  .type-tag {
+    display: flex;
+  }
+</style>

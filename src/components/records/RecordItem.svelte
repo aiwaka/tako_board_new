@@ -25,7 +25,7 @@
 <div class="who">
   <!-- TODO: ユーザーIDを見るのは容易ではあるがリンクに含めるのも変な気がする. 他のやり方を考える. -->
   <a href={`/record/${record.userId}-${record.id}`}>
-    {record.who}
+    {record.userName}
   </a>
 </div>
 <div class="date">{record.getDisplayDate()}</div>

@@ -10,7 +10,7 @@ export const recordTypeStrList = [
   "散歩",
   "爪切り",
   "病院",
-];
+] as const;
 
 export class Record {
   constructor(

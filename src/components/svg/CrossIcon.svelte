@@ -5,7 +5,7 @@
 <svg
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 512 512"
-  style="width: 16px; height: 16px; opacity: 1;"
+  style="width: 12px; height: 12px; opacity: 1;"
   xml:space="preserve"
 >
   <g>

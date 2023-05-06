@@ -39,31 +39,39 @@
     }
     return result;
   };
-  let possibleRecordTypeList = [] as [string, boolean][];
-  $: {
-    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
-    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
-  }
   $: addTypeButtonDisabled = recordType === -1;
+  let possibleRecordTypeList: [string, boolean][] = recordTypeStrList.map((value) => [value, true]);
+  /** 現在選択されているお世話タイプのリストを示す文字列配列 */
+  let storedRecordTypeList = [] as string[];
+  /** お世話タイプの集合に追加する */
   const addRecordType = () => {
     recordTypeNumStore.add(recordType);
+    recordTypeNumStore = recordTypeNumStore;
+    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
+    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
+    recordType = -1;
+  };
+  const deleteTypeTag = (ev: CustomEvent<{ tagName: string }>) => {
+    const tagName = ev.detail.tagName;
+    const index = recordTypeStrList.findIndex((str) => str === tagName);
+    recordTypeNumStore.delete(index);
+    recordTypeNumStore = recordTypeNumStore;
+    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
+    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
+    recordType = -1;
   };
   // ペアが違反しているかどうかは送信時にチェックするのでここでは確認しないことにする.
   $: sendButtonDisabled =
     recordTypeNumStore.size === 0 ||
     recordTypeNumStore.has(-1) ||
     (recordTypeNumStore.has(0) && comment === "") ||
-    (recordTypeNumStore.has(8) && comment === "");
-  // recordType === -1 ||
-  // (recordType === 0 && comment === "") ||
-  // (recordType === 8 && comment === "");
-  /** 現在選択されているお世話タイプのリストを示す文字列配列 */
-  $: storedRecordTypeList = [] as string[];
+    (recordTypeNumStore.has(8) && !recordTypeNumStore.has(7) && comment === "");
   $: {
     storedRecordTypeList.splice(0);
     for (const num of recordTypeNumStore) {
       storedRecordTypeList.push(recordTypeStrList[num]);
     }
+    storedRecordTypeList = storedRecordTypeList;
   }
 
   const imageUploaded = (ev: CustomEvent<{ file: File }>) => {
@@ -122,12 +130,7 @@
   <div class="record-input-form">
     <fieldset class="record-input">
       <label for="record-input--type">タイプ</label>
-      <select
-        id="record-input--type"
-        name="record-type"
-        bind:value={recordType}
-        on:change={addRecordType}
-      >
+      <select id="record-input--type" name="record-type" bind:value={recordType}>
         <option value={-1}>---</option>
         {#each possibleRecordTypeList as [typeName, possible], index (typeName)}
           {#if possible}
@@ -145,10 +148,12 @@
         bind:value={comment}
       />
     </fieldset>
+    <button type="button" on:click={addRecordType} disabled={addTypeButtonDisabled}>
+      タイプ追加
+    </button>
     <div class="tag-list">
-      <TypeTag name="test" />
-      {#each storedRecordTypeList as typeName}
-        <TypeTag name={typeName} />
+      {#each storedRecordTypeList as typeName (typeName)}
+        <TypeTag name={typeName} on:delete-tag={deleteTypeTag} />
       {/each}
     </div>
     <!-- 任意時刻入力ボックス -->
@@ -183,7 +188,7 @@
   .add-button-container {
     margin: 0.4rem auto;
   }
-  .add-button {
+  button {
     padding: 0.1rem 0.1rem;
     border: 2px solid #777;
     border-radius: 4px;
@@ -212,5 +217,11 @@
   .record-input select {
     border: 1px solid #777;
     transition: ease-in-out 0.2s;
+  }
+  .tag-list {
+    padding: 0.2rem 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 </style>

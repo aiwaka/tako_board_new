@@ -113,7 +113,7 @@ export class Record implements RecordSchema {
   static computedFullTypeStr(num: number) {
     return recordTypeStrList[num];
   }
-  private getTypeByMethod(method: (num: number) => string): string | string[] {
+  private getTypeByMethod(method: (num: number) => string): string {
     if (this.version === 1) {
       const recordType = this.recordType as number;
       method(recordType);
@@ -123,20 +123,20 @@ export class Record implements RecordSchema {
       for (const num of recordTypeList) {
         result.push(method(num));
       }
-      return result;
+      return result.join(", ");
     } else {
       throw new Error("バージョンが不正です");
     }
     // ここまで到達しないはず.
     return "";
   }
-  public getType(): string | string[] {
+  public getType(): string {
     return this.getTypeByMethod(Record.computedTypeStr);
   }
   /**
    * 完全な名前のタイプを取得
    */
-  public getFullType(): string | string[] {
+  public getFullType(): string {
     return this.getTypeByMethod(Record.computedFullTypeStr);
   }
 }

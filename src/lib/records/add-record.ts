@@ -9,18 +9,15 @@ export const addRecordToFirestore = async (
   inputTime: Date | null = null,
   imageName = ""
 ): Promise<Record> => {
-  if (typeSet.has(0) && comment === "") {
+  if (typeSet.size === 0) {
     throw new Error("コメントのみを送る場合はコメントが必須です。");
+  } else if (typeSet.has(-1)) {
+    throw new Error("無効なタイプが選択されています。");
+  } else if (typeSet.has(0) && comment === "") {
+    throw new Error("種類が選択されていません。");
   } else if (typeSet.has(8) && comment === "") {
     throw new Error("病院に行った記録にはコメントが必須です。");
   }
-  // if (type === -1) {
-  //   throw new Error("レコードタイプを選んでください.");
-  // } else if (type === 0 && comment === "") {
-  //   throw new Error("コメントのみを送る場合はコメントが必須です。");
-  // } else if (type === 8 && comment === "") {
-  //   throw new Error("病院に行った記録にはコメントが必須です。");
-  // }
   const user = await getCurrentUser();
   const uid = user?.uid;
   if (!uid) {
@@ -39,7 +36,7 @@ export const addRecordToFirestore = async (
 
   // refを作成した時点でidは生成されているのでそれを使う.
   const newRecordData = new Record(
-    1,
+    2,
     newRecordRef.id,
     uid,
     userName,

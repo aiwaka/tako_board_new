@@ -31,6 +31,15 @@ export const possibleTypePairList = [
   [5, 6],
   [7, 8],
 ] as const;
+/** 組み合わせを許可する番号対の隣接行列 */
+export const possibleTypePairAdjacencyMatrix = ((list: typeof possibleTypePairList) => {
+  const result = recordTypeStrList.map(() => recordTypeStrList.map(() => false));
+  for (const pair of list) {
+    result[pair[0]][pair[1]] = true;
+    result[pair[1]][pair[0]] = true;
+  }
+  return result;
+})(possibleTypePairList);
 
 export interface RecordSchema {
   /**
@@ -38,11 +47,11 @@ export interface RecordSchema {
    * 1: recordTypeを単一の数値で保持する.
    * 2: recordTypeを数値の配列で保持する.
    */
-  version: number;
+  version: 1 | 2;
   id: string;
   userId: string;
   userName: string;
-  recordType: number;
+  recordType: number | number[];
   recordDate: Timestamp;
   actualDate: Timestamp;
   comment: string;
@@ -51,11 +60,11 @@ export interface RecordSchema {
 
 export class Record implements RecordSchema {
   constructor(
-    public version: number,
+    public version: 1 | 2,
     public id: string,
     public userId: string,
     public userName: string,
-    public recordType: number,
+    public recordType: number | number[],
     public recordDate: Timestamp,
     public actualDate: Timestamp,
     public comment: string,
@@ -87,24 +96,47 @@ export class Record implements RecordSchema {
   public getActualDate(): string {
     return this.getDate("actual");
   }
-  public getType(): string {
-    // コメントのみは表示しないことにする.
-    if (this.recordType === 0) {
+  static computedTypeStr(num: number) {
+    if (num === 0) {
+      // コメントのみは表示しないことにする.
       return "";
     }
     // トイレ掃除は長いので省略表記
-    if (this.recordType === 4) {
+    if (num === 4) {
       return "トイレ";
     }
-    if (this.recordType === 5) {
+    if (num === 5) {
       return "トイレ(簡)";
     }
-    return recordTypeStrList[this.recordType];
+    return recordTypeStrList[num];
+  }
+  static computedFullTypeStr(num: number) {
+    return recordTypeStrList[num];
+  }
+  private getTypeByMethod(method: (num: number) => string): string | string[] {
+    if (this.version === 1) {
+      const recordType = this.recordType as number;
+      method(recordType);
+    } else if (this.version === 2) {
+      const recordTypeList = this.recordType as number[];
+      const result = [];
+      for (const num of recordTypeList) {
+        result.push(method(num));
+      }
+      return result;
+    } else {
+      throw new Error("バージョンが不正です");
+    }
+    // ここまで到達しないはず.
+    return "";
+  }
+  public getType(): string | string[] {
+    return this.getTypeByMethod(Record.computedTypeStr);
   }
   /**
    * 完全な名前のタイプを取得
    */
-  public getFullType(): string {
-    return recordTypeStrList[this.recordType];
+  public getFullType(): string | string[] {
+    return this.getTypeByMethod(Record.computedFullTypeStr);
   }
 }

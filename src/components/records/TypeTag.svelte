@@ -2,7 +2,7 @@
   import type { recordTypeStrList } from "$lib/records";
   import CrossIcon from "../svg/CrossIcon.svelte";
 
-  export let name: (typeof recordTypeStrList)[number];
+  export let name: string;
 </script>
 
 <div class="type-tag">

@@ -6,6 +6,8 @@
   import ArbitraryTimeInput from "./ArbitraryTimeInput.svelte";
   import ArrowIcon from "./ArrowIcon.svelte";
   import FileUploader from "./FileUploader.svelte";
+  import { possibleTypePairAdjacencyMatrix } from "@/lib/records/record";
+  import TypeTag from "./TypeTag.svelte";
 
   $: arbitraryTimeActive = false;
   $: comment = "";
@@ -13,13 +15,56 @@
   $: imageObj = imageObj;
   $: recordTime = new Date();
   $: recordType = -1;
+  /** 現在選択されているお世話タイプの集合 */
+  $: recordTypeNumStore = new Set<number>();
 
   const dispatch = createEventDispatcher<{ "record-added": { addedRecord: Record } }>();
 
-  $: addButtonDisabled =
-    recordType === -1 ||
-    (recordType === 0 && comment === "") ||
-    (recordType === 8 && comment === "");
+  /**
+   * 組み合わせられる番号でtrueとなる配列を返す.
+   * @param numSet 番号のリスト
+   */
+  const getPossibleTypeNumList = (numSet: Set<number>) => {
+    if (numSet.size === 0) {
+      // 空集合に対しては全て可能として返す.
+      // TODO: この辺りを統一的に扱えるやり方があるのでは
+      return possibleTypePairAdjacencyMatrix.map(() => true);
+    }
+    const result = possibleTypePairAdjacencyMatrix.map(() => true);
+    for (const num of numSet) {
+      for (let i = 0; i < result.length; i++) {
+        // 一つでもfalseなら最終的にfalseになる
+        result[i] &&= possibleTypePairAdjacencyMatrix[num][i];
+      }
+    }
+    return result;
+  };
+  let possibleRecordTypeList = [] as [string, boolean][];
+  $: {
+    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
+    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
+  }
+  $: addTypeButtonDisabled = recordType === -1;
+  const addRecordType = () => {
+    recordTypeNumStore.add(recordType);
+  };
+  // ペアが違反しているかどうかは送信時にチェックするのでここでは確認しないことにする.
+  $: sendButtonDisabled =
+    recordTypeNumStore.size === 0 ||
+    recordTypeNumStore.has(-1) ||
+    (recordTypeNumStore.has(0) && comment === "") ||
+    (recordTypeNumStore.has(8) && comment === "");
+  // recordType === -1 ||
+  // (recordType === 0 && comment === "") ||
+  // (recordType === 8 && comment === "");
+  /** 現在選択されているお世話タイプのリストを示す文字列配列 */
+  $: storedRecordTypeList = [] as string[];
+  $: {
+    storedRecordTypeList.splice(0);
+    for (const num of recordTypeNumStore) {
+      storedRecordTypeList.push(recordTypeStrList[num]);
+    }
+  }
 
   const imageUploaded = (ev: CustomEvent<{ file: File }>) => {
     imageObj = ev.detail.file;
@@ -52,7 +97,7 @@
     }
     try {
       const addedRecord = await addRecordToFirestore(
-        recordType,
+        recordTypeNumStore,
         comment,
         arbitraryTimeActive ? recordTime : null,
         imageName
@@ -61,6 +106,7 @@
       dispatch("record-added", { addedRecord });
       // 入力後も任意時刻入力ボックスだけは閉じない. 連続して入力できるようにする.
       recordType = -1;
+      recordTypeNumStore = new Set();
       comment = "";
       imageObj = null;
       resetFileUploader();
@@ -76,10 +122,17 @@
   <div class="record-input-form">
     <fieldset class="record-input">
       <label for="record-input--type">タイプ</label>
-      <select id="record-input--type" name="record-type" bind:value={recordType}>
+      <select
+        id="record-input--type"
+        name="record-type"
+        bind:value={recordType}
+        on:change={addRecordType}
+      >
         <option value={-1}>---</option>
-        {#each recordTypeStrList as recordTypeStr, index (recordTypeStr)}
-          <option value={index}>{recordTypeStr}</option>
+        {#each possibleRecordTypeList as [typeName, possible], index (typeName)}
+          {#if possible}
+            <option value={index}>{typeName}</option>
+          {/if}
         {/each}
       </select>
 
@@ -92,6 +145,12 @@
         bind:value={comment}
       />
     </fieldset>
+    <div class="tag-list">
+      <TypeTag name="test" />
+      {#each storedRecordTypeList as typeName}
+        <TypeTag name={typeName} />
+      {/each}
+    </div>
     <!-- 任意時刻入力ボックス -->
     <ArbitraryTimeInput
       on:input-time-changed={inputTimeChanged}
@@ -100,9 +159,9 @@
     <!-- 画像追加コンテナ -->
     <FileUploader bind:resetFileUploader on:uploaded={imageUploaded} on:reset={onUploaderReset} />
   </div>
-  <ArrowIcon active={!addButtonDisabled} />
+  <ArrowIcon active={!sendButtonDisabled} />
   <div class="add-button-container">
-    <button class="add-button" on:click={addRecord} disabled={addButtonDisabled}> 追加 </button>
+    <button class="add-button" on:click={addRecord} disabled={sendButtonDisabled}> 追加 </button>
   </div>
 </div>
 

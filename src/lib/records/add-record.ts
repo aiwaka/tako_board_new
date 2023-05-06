@@ -4,18 +4,23 @@ import { Record } from "./record";
 import { recordConverter } from "./record-firestore-converter";
 
 export const addRecordToFirestore = async (
-  type: number,
+  typeSet: Set<number>,
   comment: string,
   inputTime: Date | null = null,
   imageName = ""
 ): Promise<Record> => {
-  if (type === -1) {
-    throw new Error("レコードタイプを選んでください.");
-  } else if (type === 0 && comment === "") {
+  if (typeSet.has(0) && comment === "") {
     throw new Error("コメントのみを送る場合はコメントが必須です。");
-  } else if (type === 8 && comment === "") {
+  } else if (typeSet.has(8) && comment === "") {
     throw new Error("病院に行った記録にはコメントが必須です。");
   }
+  // if (type === -1) {
+  //   throw new Error("レコードタイプを選んでください.");
+  // } else if (type === 0 && comment === "") {
+  //   throw new Error("コメントのみを送る場合はコメントが必須です。");
+  // } else if (type === 8 && comment === "") {
+  //   throw new Error("病院に行った記録にはコメントが必須です。");
+  // }
   const user = await getCurrentUser();
   const uid = user?.uid;
   if (!uid) {
@@ -38,7 +43,7 @@ export const addRecordToFirestore = async (
     newRecordRef.id,
     uid,
     userName,
-    type,
+    Array.from(typeSet),
     recordTime,
     actualTime,
     comment,

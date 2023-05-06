@@ -4,6 +4,7 @@ import { Record } from "./record";
 export const recordConverter = {
   toFirestore: (record: Record): DocumentData => {
     return {
+      version: record.version,
       type: record.recordType,
       userId: record.userId,
       comment: record.comment,

@@ -6,6 +6,7 @@
   export let data: PageData;
 </script>
 
+<!-- TODO: ここから削除する機能をつける -->
 {#await getOneRecord(data.userId, data.recordId)}
   <p>Loading...</p>
 {:then record}

@@ -25,11 +25,7 @@
    * @param numSet 番号のリスト
    */
   const getPossibleTypeNumList = (numSet: Set<number>) => {
-    if (numSet.size === 0) {
-      // 空集合に対しては全て可能として返す.
-      // TODO: この辺りを統一的に扱えるやり方があるのでは
-      return possibleTypePairAdjacencyMatrix.map(() => true);
-    }
+    // 集合が空の場合すべてtrueとなるのでOK.
     const result = possibleTypePairAdjacencyMatrix.map(() => true);
     for (const num of numSet) {
       for (let i = 0; i < result.length; i++) {
@@ -39,6 +35,7 @@
     }
     return result;
   };
+  /** タイプ追加ボタンが有効かどうか */
   $: addTypeButtonDisabled = recordType === -1;
   let possibleRecordTypeList: [string, boolean][] = recordTypeStrList.map((value) => [value, true]);
   /** 現在選択されているお世話タイプのリストを示す文字列配列 */
@@ -138,6 +135,14 @@
           {/if}
         {/each}
       </select>
+      <button
+        class="add-type-button"
+        type="button"
+        on:click={addRecordType}
+        disabled={addTypeButtonDisabled}
+      >
+        追加
+      </button>
 
       <label for="record-input--text">コメント</label>
       <input
@@ -148,9 +153,6 @@
         bind:value={comment}
       />
     </fieldset>
-    <button type="button" on:click={addRecordType} disabled={addTypeButtonDisabled}>
-      タイプ追加
-    </button>
     <div class="tag-list">
       {#each storedRecordTypeList as typeName (typeName)}
         <TypeTag name={typeName} on:delete-tag={deleteTypeTag} />
@@ -198,10 +200,10 @@
     display: grid;
     grid-template-rows: repeat(2, 2.1rem);
     line-height: 2.1rem;
-    grid-template-columns: 4.8rem 9rem;
+    grid-template-columns: 1fr 7.8rem 1fr;
     row-gap: 1.2rem;
-    column-gap: 1rem;
-    padding: 1.2rem 1.5rem;
+    column-gap: 0.8rem;
+    padding: 1.2rem 0.3rem;
     border: none;
   }
   .record-input input {
@@ -217,6 +219,9 @@
   .record-input select {
     border: 1px solid #777;
     transition: ease-in-out 0.2s;
+  }
+  .add-type-button {
+    line-height: 0;
   }
   .tag-list {
     padding: 0.2rem 0.4rem;

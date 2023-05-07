@@ -6,13 +6,14 @@
   export let data: PageData;
 </script>
 
+<!-- TODO: ここから削除する機能をつける -->
 {#await getOneRecord(data.userId, data.recordId)}
   <p>Loading...</p>
 {:then record}
   <div class="info-container">
     <div class="grid-line" />
-    <div class="who label">投稿者</div>
-    <div class="who content">{record.who}</div>
+    <div class="user-name label">投稿者</div>
+    <div class="user-name content">{record.userName}</div>
     <div class="grid-line" />
     <div class="display-date label">時刻</div>
     <div class="display-date content">{record.getDisplayDate()}</div>

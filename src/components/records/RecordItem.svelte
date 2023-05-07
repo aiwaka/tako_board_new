@@ -3,6 +3,7 @@
   import ModalWindow from "@/components/ModalWindow.svelte";
   import { createEventDispatcher } from "svelte";
   import ImageIcon from "../ImageIcon.svelte";
+  import CrossIcon from "../svg/CrossIcon.svelte";
 
   export let record: Record;
   export let currentUserId: string;
@@ -24,7 +25,7 @@
 <div class="who">
   <!-- TODO: ユーザーIDを見るのは容易ではあるがリンクに含めるのも変な気がする. 他のやり方を考える. -->
   <a href={`/record/${record.userId}-${record.id}`}>
-    {record.who}
+    {record.userName}
   </a>
 </div>
 <div class="date">{record.getDisplayDate()}</div>
@@ -45,7 +46,8 @@
 </div>
 <div class="delete-button">
   <button disabled={deleteDisabled} on:click={deleteRecord}>
-    <svg
+    <CrossIcon disabled={deleteDisabled} />
+    <!-- <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
       style="width: 16px; height: 16px; opacity: 1;"
@@ -58,7 +60,7 @@
           style={`fill: ${deleteDisabled ? "gray" : "var(--main-font-color)"};`}
         />
       </g>
-    </svg>
+    </svg> -->
   </button>
 </div>
 

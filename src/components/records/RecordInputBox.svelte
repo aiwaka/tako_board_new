@@ -6,6 +6,8 @@
   import ArbitraryTimeInput from "./ArbitraryTimeInput.svelte";
   import ArrowIcon from "./ArrowIcon.svelte";
   import FileUploader from "./FileUploader.svelte";
+  import { possibleTypePairAdjacencyMatrix } from "@/lib/records/record";
+  import TypeTag from "./TypeTag.svelte";
 
   $: arbitraryTimeActive = false;
   $: comment = "";
@@ -13,13 +15,61 @@
   $: imageObj = imageObj;
   $: recordTime = new Date();
   $: recordType = -1;
+  /** 現在選択されているお世話タイプの集合 */
+  $: recordTypeNumStore = new Set<number>();
 
   const dispatch = createEventDispatcher<{ "record-added": { addedRecord: Record } }>();
 
-  $: addButtonDisabled =
-    recordType === -1 ||
-    (recordType === 0 && comment === "") ||
-    (recordType === 8 && comment === "");
+  /**
+   * 組み合わせられる番号でtrueとなる配列を返す.
+   * @param numSet 番号のリスト
+   */
+  const getPossibleTypeNumList = (numSet: Set<number>) => {
+    // 集合が空の場合すべてtrueとなるのでOK.
+    const result = possibleTypePairAdjacencyMatrix.map(() => true);
+    for (const num of numSet) {
+      for (let i = 0; i < result.length; i++) {
+        // 一つでもfalseなら最終的にfalseになる
+        result[i] &&= possibleTypePairAdjacencyMatrix[num][i];
+      }
+    }
+    return result;
+  };
+  /** タイプ追加ボタンが有効かどうか */
+  $: addTypeButtonDisabled = recordType === -1;
+  let possibleRecordTypeList: [string, boolean][] = recordTypeStrList.map((value) => [value, true]);
+  /** 現在選択されているお世話タイプのリストを示す文字列配列 */
+  let storedRecordTypeList = [] as string[];
+  /** お世話タイプの集合に追加する */
+  const addRecordType = () => {
+    recordTypeNumStore.add(recordType);
+    recordTypeNumStore = recordTypeNumStore;
+    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
+    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
+    recordType = -1;
+  };
+  const deleteTypeTag = (ev: CustomEvent<{ tagName: string }>) => {
+    const tagName = ev.detail.tagName;
+    const index = recordTypeStrList.findIndex((str) => str === tagName);
+    recordTypeNumStore.delete(index);
+    recordTypeNumStore = recordTypeNumStore;
+    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
+    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
+    recordType = -1;
+  };
+  // ペアが違反しているかどうかは送信時にチェックするのでここでは確認しないことにする.
+  $: sendButtonDisabled =
+    recordTypeNumStore.size === 0 ||
+    recordTypeNumStore.has(-1) ||
+    (recordTypeNumStore.has(0) && comment === "") ||
+    (recordTypeNumStore.has(8) && !recordTypeNumStore.has(7) && comment === "");
+  $: {
+    storedRecordTypeList.splice(0);
+    for (const num of recordTypeNumStore) {
+      storedRecordTypeList.push(recordTypeStrList[num]);
+    }
+    storedRecordTypeList = storedRecordTypeList;
+  }
 
   const imageUploaded = (ev: CustomEvent<{ file: File }>) => {
     imageObj = ev.detail.file;
@@ -52,7 +102,7 @@
     }
     try {
       const addedRecord = await addRecordToFirestore(
-        recordType,
+        recordTypeNumStore,
         comment,
         arbitraryTimeActive ? recordTime : null,
         imageName
@@ -61,6 +111,7 @@
       dispatch("record-added", { addedRecord });
       // 入力後も任意時刻入力ボックスだけは閉じない. 連続して入力できるようにする.
       recordType = -1;
+      recordTypeNumStore = new Set();
       comment = "";
       imageObj = null;
       resetFileUploader();
@@ -78,10 +129,20 @@
       <label for="record-input--type">タイプ</label>
       <select id="record-input--type" name="record-type" bind:value={recordType}>
         <option value={-1}>---</option>
-        {#each recordTypeStrList as recordTypeStr, index (recordTypeStr)}
-          <option value={index}>{recordTypeStr}</option>
+        {#each possibleRecordTypeList as [typeName, possible], index (typeName)}
+          {#if possible}
+            <option value={index}>{typeName}</option>
+          {/if}
         {/each}
       </select>
+      <button
+        class="add-type-button"
+        type="button"
+        on:click={addRecordType}
+        disabled={addTypeButtonDisabled}
+      >
+        追加
+      </button>
 
       <label for="record-input--text">コメント</label>
       <input
@@ -92,6 +153,11 @@
         bind:value={comment}
       />
     </fieldset>
+    <div class="tag-list">
+      {#each storedRecordTypeList as typeName (typeName)}
+        <TypeTag name={typeName} on:delete-tag={deleteTypeTag} />
+      {/each}
+    </div>
     <!-- 任意時刻入力ボックス -->
     <ArbitraryTimeInput
       on:input-time-changed={inputTimeChanged}
@@ -100,9 +166,11 @@
     <!-- 画像追加コンテナ -->
     <FileUploader bind:resetFileUploader on:uploaded={imageUploaded} on:reset={onUploaderReset} />
   </div>
-  <ArrowIcon active={!addButtonDisabled} />
+  <ArrowIcon active={!sendButtonDisabled} />
   <div class="add-button-container">
-    <button class="add-button" on:click={addRecord} disabled={addButtonDisabled}> 追加 </button>
+    <button class="add-button" on:click={addRecord} disabled={sendButtonDisabled}>
+      記録を追加
+    </button>
   </div>
 </div>
 
@@ -125,6 +193,9 @@
     margin: 0.4rem auto;
   }
   .add-button {
+    padding: 0.3rem 0.4rem;
+  }
+  button {
     padding: 0.1rem 0.1rem;
     border: 2px solid #777;
     border-radius: 4px;
@@ -134,10 +205,10 @@
     display: grid;
     grid-template-rows: repeat(2, 2.1rem);
     line-height: 2.1rem;
-    grid-template-columns: 4.8rem 9rem;
+    grid-template-columns: 1fr 7.8rem 1fr;
     row-gap: 1.2rem;
-    column-gap: 1rem;
-    padding: 1.2rem 1.5rem;
+    column-gap: 0.8rem;
+    padding: 1.2rem 0.3rem;
     border: none;
   }
   .record-input input {
@@ -153,5 +224,14 @@
   .record-input select {
     border: 1px solid #777;
     transition: ease-in-out 0.2s;
+  }
+  .add-type-button {
+    line-height: 0;
+  }
+  .tag-list {
+    padding: 0.2rem 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 </style>

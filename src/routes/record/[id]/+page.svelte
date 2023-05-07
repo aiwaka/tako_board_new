@@ -1,12 +1,36 @@
 <script lang="ts">
-  import { getOneRecord } from "$lib/records";
-  import { getImageURL } from "$lib/records/image";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
   import type { PageData } from "./$types";
+  import { deleteRecordFromFirestore, getOneRecord } from "$lib/records";
+  import { getImageURL } from "$lib/records/image";
+  import { getCurrentUser } from "@/settings/firebase";
+  import ButtonUi from "@/components/ButtonUi.svelte";
 
   export let data: PageData;
+
+  let currentUserId = "";
+  onMount(async () => {
+    const user = await getCurrentUser();
+    if (user) {
+      currentUserId = user.uid;
+    }
+  });
+
+  const deleteRecord = async () => {
+    if (confirm("この記録を削除しますか？")) {
+      try {
+        await deleteRecordFromFirestore(data.recordId);
+      } catch (error) {
+        console.error(error);
+        alert("エラーが発生しました。\n" + error);
+        return;
+      }
+      goto("/record");
+    }
+  };
 </script>
 
-<!-- TODO: ここから削除する機能をつける -->
 {#await getOneRecord(data.userId, data.recordId)}
   <p>Loading...</p>
 {:then record}
@@ -37,8 +61,14 @@
           <div>画像を読み込めませんでした。</div>
           <div>{e}</div>
         {/await}
+        <div class="grid-line" />
       {/if}
     </div>
+    {#if currentUserId === record.userId}
+      <div class="delete-button-container">
+        <ButtonUi alertFlag={true} on:click={deleteRecord}>この記録を削除</ButtonUi>
+      </div>
+    {/if}
   </div>
 {:catch error}
   <div class="error">{error}</div>

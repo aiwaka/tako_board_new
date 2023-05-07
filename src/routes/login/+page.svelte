@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { signInWithEmailAndPassword, signOut } from "firebase/auth";
   import { auth } from "@/settings/firebase";
   import { getUserName } from "$lib/utils/get-username";
-  import { onMount } from "svelte";
+
+  import ButtonUi from "@/components/ButtonUi.svelte";
 
   $: errorMessage = "";
   $: loggedIn = false;
@@ -66,12 +68,14 @@
         type="password"
         bind:value={passwordInput}
       />
-      <button class="login-button" on:click={login}>Login</button>
+      <div class="login-button-container">
+        <ButtonUi on:click={login}>ログイン</ButtonUi>
+      </div>
     </div>
   {:else}
     <div class="login-name-display">
       {loginUserName}としてログインしています。
-      <button on:click={logout}>Logout</button>
+      <ButtonUi on:click={logout}>ログアウト</ButtonUi>
     </div>
   {/if}
 
@@ -98,10 +102,8 @@
   .login-form > input {
     grid-column: 2 / -1;
   }
-  .login-button {
-    grid-column: -2 / -1;
-  }
-  button {
-    border: 1px solid var(--main-font-color);
+  .login-button-container {
+    grid-column: 2 / -1;
+    text-align: right;
   }
 </style>

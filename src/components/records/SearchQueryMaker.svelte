@@ -1,5 +1,14 @@
 <script lang="ts">
-  import { endAt, orderBy, startAt, QueryConstraint, where } from "@firebase/firestore";
+  import {
+    endAt,
+    orderBy,
+    startAt,
+    QueryConstraint,
+    where,
+    or,
+    type QueryNonFilterConstraint,
+    QueryCompositeFilterConstraint,
+  } from "@firebase/firestore";
   import { toDateString } from "$lib/utils";
 
   import { recordTypeStrList } from "$lib/records";
@@ -7,7 +16,7 @@
   import ToggleButton from "../ToggleButton.svelte";
 
   const today = new Date();
-  // setDateはオブジェクトを変更するので適当な変数をつくる
+  // setDateはオブジェクトを変更するので適当なインスタンスを複数作成する
   const tempToday = new Date();
   const prevWeekDay = new Date(tempToday.setDate(tempToday.getDate() - 7));
 
@@ -24,7 +33,10 @@
   $: fetchButtonDisabled = true;
   $: recordType = -1;
 
-  export let fetchCallback: (queries: QueryConstraint[]) => Promise<void>;
+  export let fetchCallback: (
+    orQuery: QueryCompositeFilterConstraint | null,
+    remainderQueries: QueryNonFilterConstraint[]
+  ) => Promise<void>;
 
   onMount(() => fetch());
 
@@ -38,16 +50,20 @@
     startDate.setHours(0);
     const endDateTomorrow = new Date(endDateTomorrowStr);
     endDateTomorrow.setHours(0);
-    const queries: QueryConstraint[] = [
+    // 日付制約
+    const nonFilterQueries: QueryNonFilterConstraint[] = [
       orderBy("date", "desc"),
       endAt(startDate),
       startAt(endDateTomorrow),
     ];
-    if (recordType !== -1) {
-      queries.push(where("type", "==", recordType));
-    }
+    // タイプ制約
+    // 配列と数値が混ざっているのでorクエリを使う
+    const orQuery =
+      recordType === -1
+        ? null
+        : or(where("type", "==", recordType), where("type", "array-contains", recordType));
     fetchButtonDisabled = true;
-    await fetchCallback(queries);
+    await fetchCallback(orQuery, nonFilterQueries);
   };
 
   const enableFetchButton = () => (fetchButtonDisabled = false);

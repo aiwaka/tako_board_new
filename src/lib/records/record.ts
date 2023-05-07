@@ -116,7 +116,7 @@ export class Record implements RecordSchema {
   private getTypeByMethod(method: (num: number) => string): string {
     if (this.version === 1) {
       const recordType = this.recordType as number;
-      method(recordType);
+      return method(recordType);
     } else if (this.version === 2) {
       const recordTypeList = this.recordType as number[];
       const result = [];
@@ -127,8 +127,6 @@ export class Record implements RecordSchema {
     } else {
       throw new Error("バージョンが不正です");
     }
-    // ここまで到達しないはず.
-    return "";
   }
   public getType(): string {
     return this.getTypeByMethod(Record.computedTypeStr);

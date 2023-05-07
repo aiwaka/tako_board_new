@@ -4,11 +4,12 @@ import { Record } from "./record";
 export const recordConverter = {
   toFirestore: (record: Record): DocumentData => {
     return {
-      type: record.type,
+      version: record.version,
+      type: record.recordType,
       userId: record.userId,
       comment: record.comment,
-      name: record.who,
-      date: record.date,
+      name: record.userName,
+      date: record.recordDate,
       actualDate: record.actualDate,
       imageName: record.imageName,
     };
@@ -16,6 +17,7 @@ export const recordConverter = {
   fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Record => {
     const data = snapshot.data(options);
     return new Record(
+      data.version === undefined ? 1 : data.version,
       snapshot.id,
       data.userId,
       data.name,

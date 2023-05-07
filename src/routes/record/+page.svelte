@@ -1,5 +1,8 @@
 <script lang="ts">
-  import type { QueryConstraint } from "@firebase/firestore";
+  import type {
+    QueryCompositeFilterConstraint,
+    QueryNonFilterConstraint,
+  } from "@firebase/firestore";
 
   import type { Record } from "$lib/records";
   import { getRecordsList } from "$lib/records";
@@ -26,10 +29,13 @@
   });
 
   // レコードリストを取得. クエリメーカーで作成されたクエリを渡してもらう.
-  const acquireList = async (queries: QueryConstraint[]) => {
+  const acquireList = async (
+    orQuery: QueryCompositeFilterConstraint | null,
+    remainderQueries: QueryNonFilterConstraint[]
+  ) => {
     records = [];
     try {
-      await getRecordsList(records, queries);
+      await getRecordsList(records, orQuery, remainderQueries);
     } catch (error) {
       console.log(error);
       alert("エラーが発生しました。\n" + error);

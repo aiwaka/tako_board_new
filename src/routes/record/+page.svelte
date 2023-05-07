@@ -1,7 +1,6 @@
 <script lang="ts">
   import type {
     QueryCompositeFilterConstraint,
-    QueryConstraint,
     QueryNonFilterConstraint,
   } from "@firebase/firestore";
 

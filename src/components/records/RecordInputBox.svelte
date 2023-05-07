@@ -8,6 +8,7 @@
   import FileUploader from "./FileUploader.svelte";
   import { possibleTypePairAdjacencyMatrix } from "@/lib/records/record";
   import TypeTag from "./TypeTag.svelte";
+  import ButtonUi from "@/components/ButtonUi.svelte";
 
   $: arbitraryTimeActive = false;
   $: comment = "";
@@ -135,14 +136,7 @@
           {/if}
         {/each}
       </select>
-      <button
-        class="add-type-button"
-        type="button"
-        on:click={addRecordType}
-        disabled={addTypeButtonDisabled}
-      >
-        追加
-      </button>
+      <ButtonUi on:click={addRecordType} disabled={addTypeButtonDisabled}>追加</ButtonUi>
 
       <label for="record-input--text">コメント</label>
       <input
@@ -168,9 +162,7 @@
   </div>
   <ArrowIcon active={!sendButtonDisabled} />
   <div class="add-button-container">
-    <button class="add-button" on:click={addRecord} disabled={sendButtonDisabled}>
-      記録を追加
-    </button>
+    <ButtonUi on:click={addRecord} disabled={sendButtonDisabled}>記録を追加</ButtonUi>
   </div>
 </div>
 
@@ -188,28 +180,21 @@
     flex-direction: column;
     align-items: center;
   }
-
   .add-button-container {
     margin: 0.4rem auto;
-  }
-  .add-button {
-    padding: 0.3rem 0.4rem;
-  }
-  button {
-    padding: 0.1rem 0.1rem;
-    border: 2px solid #777;
-    border-radius: 4px;
   }
 
   .record-input {
     display: grid;
     grid-template-rows: repeat(2, 2.1rem);
-    line-height: 2.1rem;
     grid-template-columns: 1fr 7.8rem 1fr;
     row-gap: 1.2rem;
     column-gap: 0.8rem;
     padding: 1.2rem 0.3rem;
     border: none;
+  }
+  .record-input label {
+    line-height: 2.1rem;
   }
   .record-input input {
     color: inherit;
@@ -224,9 +209,6 @@
   .record-input select {
     border: 1px solid #777;
     transition: ease-in-out 0.2s;
-  }
-  .add-type-button {
-    line-height: 0;
   }
   .tag-list {
     padding: 0.2rem 0.4rem;

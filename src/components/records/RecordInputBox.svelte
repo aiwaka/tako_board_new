@@ -168,7 +168,9 @@
   </div>
   <ArrowIcon active={!sendButtonDisabled} />
   <div class="add-button-container">
-    <button class="add-button" on:click={addRecord} disabled={sendButtonDisabled}> 追加 </button>
+    <button class="add-button" on:click={addRecord} disabled={sendButtonDisabled}>
+      記録を追加
+    </button>
   </div>
 </div>
 
@@ -189,6 +191,9 @@
 
   .add-button-container {
     margin: 0.4rem auto;
+  }
+  .add-button {
+    padding: 0.3rem 0.4rem;
   }
   button {
     padding: 0.1rem 0.1rem;

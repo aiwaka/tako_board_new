@@ -206,6 +206,9 @@
     border-radius: 5px;
     background-color: rgba(128, 128, 128, 0.4);
   }
+  .record-input input#record-input--text {
+    grid-column: 2/4;
+  }
   .record-input select {
     border: 1px solid #777;
     transition: ease-in-out 0.2s;

@@ -46,7 +46,7 @@
     <div class="true-date content">{record.getActualDate()}</div>
     <div class="grid-line" />
     <div class="type label">お世話の種類</div>
-    <div class="type content">{record.getFullType()}</div>
+    <div class="type content">{record.getTypeStr({ full: true })}</div>
     <div class="grid-line" />
     <div class="comment label">コメント</div>
     <div class="comment content">{record.comment}</div>

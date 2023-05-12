@@ -96,45 +96,42 @@ export class Record implements RecordSchema {
   public getActualDate(): string {
     return this.getDate("actual");
   }
+  /** タイプ番号から簡易版の文字列を返す. */
   static computedTypeStr(num: number) {
-    if (num === 0) {
-      // コメントのみは表示しないことにする.
-      return "";
+    switch (num) {
+      case 0:
+        return "";
+      case 4:
+        return "トイレ";
+      case 5:
+        return "トイレ(簡)";
+      default:
+        return recordTypeStrList[num];
     }
-    // トイレ掃除は長いので省略表記
-    if (num === 4) {
-      return "トイレ";
-    }
-    if (num === 5) {
-      return "トイレ(簡)";
-    }
+  }
+  static computedTypeStrFull(num: number) {
     return recordTypeStrList[num];
   }
-  static computedFullTypeStr(num: number) {
-    return recordTypeStrList[num];
-  }
-  private getTypeByMethod(method: (num: number) => string): string {
+  /**
+   * 表示するお世話タイプの文字列を作る.
+   * スキーマバージョンやオプション指定により変化する.
+   * @param option
+   */
+  public getTypeStr(option: { full?: boolean } = {}): string {
+    // 完全文字列指定かどうかで用いるメソッドを分ける
+    const getStrMethod = option.full ? Record.computedTypeStrFull : Record.computedTypeStr;
     if (this.version === 1) {
       const recordType = this.recordType as number;
-      return method(recordType);
+      return getStrMethod(recordType);
     } else if (this.version === 2) {
       const recordTypeList = this.recordType as number[];
       const result = [];
       for (const num of recordTypeList) {
-        result.push(method(num));
+        result.push(getStrMethod(num));
       }
       return result.join(", ");
     } else {
       throw new Error("バージョンが不正です");
     }
-  }
-  public getType(): string {
-    return this.getTypeByMethod(Record.computedTypeStr);
-  }
-  /**
-   * 完全な名前のタイプを取得
-   */
-  public getFullType(): string {
-    return this.getTypeByMethod(Record.computedFullTypeStr);
   }
 }

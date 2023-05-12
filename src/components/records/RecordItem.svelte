@@ -29,7 +29,7 @@
   </a>
 </div>
 <div class="date">{record.getDisplayDate()}</div>
-<div class="type">{record.getType()}</div>
+<div class="type">{record.getTypeStr()}</div>
 <div class="comment">
   <button class="comment-column-button" on:click={toggleShowComment}>
     {#if commentIsLong && !showWholeComment}

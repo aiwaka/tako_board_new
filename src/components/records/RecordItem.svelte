@@ -10,14 +10,19 @@
 
   $: deleteDisabled = currentUserId !== record.userId;
   $: showWholeComment = false;
+  $: showWholeTypeStr = false;
 
   const dispatch = createEventDispatcher<{ "delete-record": { id: string } }>();
 
-  const OMIT_THRESHOLD = 8; // コメント文字列を省略する文字数の閾値
+  const COMMENT_OMIT_THRESHOLD = 8 as const; // コメント文字列を省略する文字数の閾値
+  const TYPE_OMIT_THRESHOLD = 8 as const; // タイプ文字列を省略する文字数の閾値
 
-  $: commentIsLong = record.comment.length > OMIT_THRESHOLD;
-  $: shortComment = record.comment.substring(0, OMIT_THRESHOLD) + "...";
+  $: typeStrIsLong = record.getTypeStr().length > TYPE_OMIT_THRESHOLD;
+  $: shortTypeStr = record.getTypeStr({ threshold: TYPE_OMIT_THRESHOLD }) + ", 他";
+  $: commentIsLong = record.comment.length > COMMENT_OMIT_THRESHOLD;
+  $: shortComment = record.comment.substring(0, COMMENT_OMIT_THRESHOLD) + "...";
 
+  const toggleShowTypeStr = () => (showWholeTypeStr = !showWholeTypeStr);
   const toggleShowComment = () => (showWholeComment = !showWholeComment);
   const deleteRecord = () => dispatch("delete-record", { id: record.id });
 </script>
@@ -29,15 +34,31 @@
   </a>
 </div>
 <div class="date">{record.getDisplayDate()}</div>
-<div class="type">{record.getTypeStr()}</div>
+<div class="type">
+  {#if typeStrIsLong}
+    <button class="toggle-folding-button" on:click={toggleShowTypeStr}>
+      {#if !showWholeTypeStr}
+        {shortTypeStr}
+      {:else}
+        {record.getTypeStr()}
+      {/if}
+    </button>
+  {:else}
+    {record.getTypeStr()}
+  {/if}
+</div>
 <div class="comment">
-  <button class="comment-column-button" on:click={toggleShowComment}>
-    {#if commentIsLong && !showWholeComment}
-      {shortComment}
-    {:else}
-      {record.comment}
-    {/if}
-  </button>
+  {#if commentIsLong}
+    <button class="toggle-folding-button" on:click={toggleShowComment}>
+      {#if !showWholeComment}
+        {shortComment}
+      {:else}
+        {record.comment}
+      {/if}
+    </button>
+  {:else}
+    {record.comment}
+  {/if}
 </div>
 <div class="image">
   {#if record.imageName}
@@ -51,7 +72,7 @@
 </div>
 
 <style>
-  .comment-column-button {
+  .toggle-folding-button {
     border: none;
     background: transparent;
   }

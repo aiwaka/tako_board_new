@@ -42,13 +42,11 @@
   .record-table {
     width: 90%;
     height: auto;
-    /* overflow-x: scroll; */
     margin: 0.4rem auto;
     display: grid;
     grid-template-columns: repeat(4, auto) 2rem 2rem;
-    grid-auto-rows: 4rem;
+    grid-auto-rows: auto;
     place-items: center;
-    /* border-collapse: separate; */
-    /* border-spacing: 0px 30px; */
+    row-gap: 1rem;
   }
 </style>

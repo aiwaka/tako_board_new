@@ -41,6 +41,22 @@ export const possibleTypePairAdjacencyMatrix = ((list: typeof possibleTypePairLi
   return result;
 })(possibleTypePairList);
 
+/**
+ * 現在のタイプ番号セットに対して組み合わせられるタイプ番号のインデックスがtrueとなる配列を返す.
+ * @param numSet タイプ番号のリスト
+ */
+const getPossibleTypeNumList = (numSet: Set<number>) => {
+  // 集合が空の場合すべてtrueとなるのでOK.
+  const result = possibleTypePairAdjacencyMatrix.map(() => true);
+  for (const num of numSet) {
+    for (let i = 0; i < result.length; i++) {
+      // 一つでもfalseなら最終的にfalseになる
+      result[i] &&= possibleTypePairAdjacencyMatrix[num][i];
+    }
+  }
+  return result;
+};
+
 export interface RecordSchema {
   /**
    * スキーマタイプのバージョン番号.
@@ -96,45 +112,62 @@ export class Record implements RecordSchema {
   public getActualDate(): string {
     return this.getDate("actual");
   }
+  /** タイプ番号から簡易版の文字列を返す. */
   static computedTypeStr(num: number) {
-    if (num === 0) {
-      // コメントのみは表示しないことにする.
-      return "";
+    switch (num) {
+      case 0:
+        return "";
+      case 4:
+        return "トイレ";
+      case 5:
+        return "トイレ(簡)";
+      default:
+        return recordTypeStrList[num];
     }
-    // トイレ掃除は長いので省略表記
-    if (num === 4) {
-      return "トイレ";
-    }
-    if (num === 5) {
-      return "トイレ(簡)";
-    }
+  }
+  static computedTypeStrFull(num: number) {
     return recordTypeStrList[num];
   }
-  static computedFullTypeStr(num: number) {
-    return recordTypeStrList[num];
-  }
-  private getTypeByMethod(method: (num: number) => string): string {
+  /**
+   * 表示するお世話タイプの文字列を作る.
+   * スキーマバージョンやオプション指定により変化する.
+   * @param option
+   * @param full 完全文字列を使うかどうか
+   * @param threshold 指定した文字数を超えないようにする
+   */
+  public getTypeStr(option: { full?: boolean; threshold?: number } = {}): string {
+    // 完全文字列指定かどうかで用いるメソッドを分ける
+    const getStrMethod = option.full ? Record.computedTypeStrFull : Record.computedTypeStr;
     if (this.version === 1) {
       const recordType = this.recordType as number;
-      return method(recordType);
+      return getStrMethod(recordType);
     } else if (this.version === 2) {
-      const recordTypeList = this.recordType as number[];
-      const result = [];
-      for (const num of recordTypeList) {
-        result.push(method(num));
+      const recordTypeNumList = this.recordType as number[];
+      const recordTypeStrList = [] as string[];
+      for (const num of recordTypeNumList) {
+        recordTypeStrList.push(getStrMethod(num));
       }
-      return result.join(", ");
+      if (recordTypeStrList.length === 0) return "";
+      // joinの処理にthreshold処理を挟む
+      let resultStr = recordTypeStrList[0];
+      if (option.threshold && resultStr.length > option.threshold) {
+        return "";
+      }
+      for (const typeStr of recordTypeStrList.slice(1)) {
+        // thresholdが指定されている場合は先に文字数を計算して超えているならそこで終わる.
+        if (option.threshold) {
+          const temp = resultStr + ", " + typeStr;
+          if (temp.length > option.threshold) {
+            break;
+          }
+        }
+        resultStr += ", " + typeStr;
+      }
+      return resultStr;
     } else {
       throw new Error("バージョンが不正です");
     }
   }
-  public getType(): string {
-    return this.getTypeByMethod(Record.computedTypeStr);
-  }
-  /**
-   * 完全な名前のタイプを取得
-   */
-  public getFullType(): string {
-    return this.getTypeByMethod(Record.computedFullTypeStr);
-  }
 }
+
+export { getPossibleTypeNumList };

@@ -15,7 +15,7 @@ export const addRecordToFirestore = async (
     throw new Error("無効なタイプが選択されています。");
   } else if (typeSet.has(0) && comment === "") {
     throw new Error("種類が選択されていません。");
-  } else if (typeSet.has(8) && comment === "") {
+  } else if (typeSet.has(8) && !typeSet.has(7) && comment === "") {
     throw new Error("病院に行った記録にはコメントが必須です。");
   }
   const user = await getCurrentUser();

@@ -6,71 +6,55 @@
   import ArbitraryTimeInput from "./ArbitraryTimeInput.svelte";
   import ArrowIcon from "./ArrowIcon.svelte";
   import FileUploader from "./FileUploader.svelte";
-  import { possibleTypePairAdjacencyMatrix } from "@/lib/records/record";
+  import { getPossibleTypeNumList } from "@/lib/records";
   import TypeTag from "./TypeTag.svelte";
   import ButtonUi from "@/components/ButtonUi.svelte";
 
+  const dispatch = createEventDispatcher<{ "record-added": { addedRecord: Record } }>();
+
+  // NOTE: ここではリスト内で選ぶことを「選択」, タイプを集合に入れることを「追加」, DBにレコードを入れることを「送信」と呼ぶ.
   $: arbitraryTimeActive = false;
   $: comment = "";
   let imageObj: File | null = null;
   $: imageObj = imageObj;
   $: recordTime = new Date();
-  $: recordType = -1;
-  /** 現在選択されているお世話タイプの集合 */
-  $: recordTypeNumStore = new Set<number>();
-
-  const dispatch = createEventDispatcher<{ "record-added": { addedRecord: Record } }>();
-
-  /**
-   * 組み合わせられる番号でtrueとなる配列を返す.
-   * @param numSet 番号のリスト
-   */
-  const getPossibleTypeNumList = (numSet: Set<number>) => {
-    // 集合が空の場合すべてtrueとなるのでOK.
-    const result = possibleTypePairAdjacencyMatrix.map(() => true);
-    for (const num of numSet) {
-      for (let i = 0; i < result.length; i++) {
-        // 一つでもfalseなら最終的にfalseになる
-        result[i] &&= possibleTypePairAdjacencyMatrix[num][i];
-      }
-    }
-    return result;
-  };
+  /** 現在選択されているタイプ番号 */
+  $: selectedRecordTypeNum = -1;
   /** タイプ追加ボタンが有効かどうか */
-  $: addTypeButtonDisabled = recordType === -1;
-  let possibleRecordTypeList: [string, boolean][] = recordTypeStrList.map((value) => [value, true]);
-  /** 現在選択されているお世話タイプのリストを示す文字列配列 */
-  let storedRecordTypeList = [] as string[];
+  $: addTypeButtonDisabled = selectedRecordTypeNum === -1;
+  /** 現在追加されているお世話タイプの集合 */
+  $: currentRecordTypeNumSet = new Set<number>();
+  /** 現在のタイプ番号セットに対して追加可能なタイプ番号のリスト */
+  let possibleRecordTypeNumList: [string, boolean][] = [];
+  $: possibleRecordTypeNumList = getPossibleTypeNumList(currentRecordTypeNumSet).map(
+    (possibility, idx) => [recordTypeStrList[idx], possibility]
+  );
+  /** 現在追加されているお世話タイプの文字列の配列 */
+  let currentRecordTypeList = [] as string[];
+  $: currentRecordTypeList = Array.from(currentRecordTypeNumSet).map(
+    (num) => recordTypeStrList[num]
+  );
+  // ペアが違反しているかどうかは送信時にチェックするのでここでは確認しないことにする.
+  // TODO: チェックして
+  $: sendButtonDisabled =
+    currentRecordTypeNumSet.size === 0 ||
+    currentRecordTypeNumSet.has(-1) ||
+    (currentRecordTypeNumSet.has(0) && comment === "") ||
+    (currentRecordTypeNumSet.has(8) && !currentRecordTypeNumSet.has(7) && comment === "");
+
   /** お世話タイプの集合に追加する */
   const addRecordType = () => {
-    recordTypeNumStore.add(recordType);
-    recordTypeNumStore = recordTypeNumStore;
-    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
-    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
-    recordType = -1;
+    currentRecordTypeNumSet.add(selectedRecordTypeNum);
+    currentRecordTypeNumSet = currentRecordTypeNumSet;
+    selectedRecordTypeNum = -1;
   };
   const deleteTypeTag = (ev: CustomEvent<{ tagName: string }>) => {
     const tagName = ev.detail.tagName;
     const index = recordTypeStrList.findIndex((str) => str === tagName);
-    recordTypeNumStore.delete(index);
-    recordTypeNumStore = recordTypeNumStore;
-    const possibleTypeNumList = getPossibleTypeNumList(recordTypeNumStore);
-    possibleRecordTypeList = recordTypeStrList.map((value, i) => [value, possibleTypeNumList[i]]);
-    recordType = -1;
+    currentRecordTypeNumSet.delete(index);
+    currentRecordTypeNumSet = currentRecordTypeNumSet;
+    selectedRecordTypeNum = -1;
   };
-  // ペアが違反しているかどうかは送信時にチェックするのでここでは確認しないことにする.
-  $: sendButtonDisabled =
-    recordTypeNumStore.size === 0 ||
-    recordTypeNumStore.has(-1) ||
-    (recordTypeNumStore.has(0) && comment === "") ||
-    (recordTypeNumStore.has(8) && !recordTypeNumStore.has(7) && comment === "");
-  $: {
-    storedRecordTypeList.splice(0);
-    for (const num of recordTypeNumStore) {
-      storedRecordTypeList.push(recordTypeStrList[num]);
-    }
-    storedRecordTypeList = storedRecordTypeList;
-  }
 
   const imageUploaded = (ev: CustomEvent<{ file: File }>) => {
     imageObj = ev.detail.file;
@@ -103,7 +87,7 @@
     }
     try {
       const addedRecord = await addRecordToFirestore(
-        recordTypeNumStore,
+        currentRecordTypeNumSet,
         comment,
         arbitraryTimeActive ? recordTime : null,
         imageName
@@ -111,8 +95,8 @@
       // 送信がなされたら今送ったものをリストに追加し, 各フォームをリセットする.
       dispatch("record-added", { addedRecord });
       // 入力後も任意時刻入力ボックスだけは閉じない. 連続して入力できるようにする.
-      recordType = -1;
-      recordTypeNumStore = new Set();
+      selectedRecordTypeNum = -1;
+      currentRecordTypeNumSet = new Set();
       comment = "";
       imageObj = null;
       resetFileUploader();
@@ -128,9 +112,9 @@
   <div class="record-input-form">
     <fieldset class="record-input">
       <label for="record-input--type">タイプ</label>
-      <select id="record-input--type" name="record-type" bind:value={recordType}>
+      <select id="record-input--type" name="record-type" bind:value={selectedRecordTypeNum}>
         <option value={-1}>---</option>
-        {#each possibleRecordTypeList as [typeName, possible], index (typeName)}
+        {#each possibleRecordTypeNumList as [typeName, possible], index (typeName)}
           {#if possible}
             <option value={index}>{typeName}</option>
           {/if}
@@ -148,7 +132,7 @@
       />
     </fieldset>
     <div class="tag-list">
-      {#each storedRecordTypeList as typeName (typeName)}
+      {#each currentRecordTypeList as typeName (typeName)}
         <TypeTag name={typeName} on:delete-tag={deleteTypeTag} />
       {/each}
     </div>
@@ -205,6 +189,9 @@
     outline-width: 0;
     border-radius: 5px;
     background-color: rgba(128, 128, 128, 0.4);
+  }
+  .record-input input#record-input--text {
+    grid-column: 2/4;
   }
   .record-input select {
     border: 1px solid #777;

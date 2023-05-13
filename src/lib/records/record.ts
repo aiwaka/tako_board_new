@@ -116,20 +116,38 @@ export class Record implements RecordSchema {
    * 表示するお世話タイプの文字列を作る.
    * スキーマバージョンやオプション指定により変化する.
    * @param option
+   * @param full 完全文字列を使うかどうか
+   * @param threshold 指定した文字数を超えないようにする
    */
-  public getTypeStr(option: { full?: boolean } = {}): string {
+  public getTypeStr(option: { full?: boolean; threshold?: number } = {}): string {
     // 完全文字列指定かどうかで用いるメソッドを分ける
     const getStrMethod = option.full ? Record.computedTypeStrFull : Record.computedTypeStr;
     if (this.version === 1) {
       const recordType = this.recordType as number;
       return getStrMethod(recordType);
     } else if (this.version === 2) {
-      const recordTypeList = this.recordType as number[];
-      const result = [];
-      for (const num of recordTypeList) {
-        result.push(getStrMethod(num));
+      const recordTypeNumList = this.recordType as number[];
+      const recordTypeStrList = [] as string[];
+      for (const num of recordTypeNumList) {
+        recordTypeStrList.push(getStrMethod(num));
       }
-      return result.join(", ");
+      if (recordTypeStrList.length === 0) return "";
+      // joinの処理にthreshold処理を挟む
+      let resultStr = recordTypeStrList[0];
+      if (option.threshold && resultStr.length > option.threshold) {
+        return "";
+      }
+      for (const typeStr of recordTypeStrList.slice(1)) {
+        // thresholdが指定されている場合は先に文字数を計算して超えているならそこで終わる.
+        if (option.threshold) {
+          const temp = resultStr + ", " + typeStr;
+          if (temp.length > option.threshold) {
+            break;
+          }
+        }
+        resultStr += ", " + typeStr;
+      }
+      return resultStr;
     } else {
       throw new Error("バージョンが不正です");
     }

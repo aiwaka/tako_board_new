@@ -1,4 +1,4 @@
-import { recordTypeStrList, Record } from "./record";
+import { recordTypeStrList, Record, getPossibleTypeNumList } from "./record";
 import { recordConverter } from "./record-firestore-converter";
 import { getOneRecord, getRecordsList } from "./get-record";
 import { addRecordToFirestore } from "./add-record";
@@ -8,6 +8,7 @@ export {
   recordTypeStrList,
   addRecordToFirestore,
   getOneRecord,
+  getPossibleTypeNumList,
   Record,
   recordConverter,
   getRecordsList,

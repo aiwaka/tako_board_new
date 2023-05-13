@@ -41,6 +41,22 @@ export const possibleTypePairAdjacencyMatrix = ((list: typeof possibleTypePairLi
   return result;
 })(possibleTypePairList);
 
+/**
+ * 現在のタイプ番号セットに対して組み合わせられるタイプ番号のインデックスがtrueとなる配列を返す.
+ * @param numSet タイプ番号のリスト
+ */
+const getPossibleTypeNumList = (numSet: Set<number>) => {
+  // 集合が空の場合すべてtrueとなるのでOK.
+  const result = possibleTypePairAdjacencyMatrix.map(() => true);
+  for (const num of numSet) {
+    for (let i = 0; i < result.length; i++) {
+      // 一つでもfalseなら最終的にfalseになる
+      result[i] &&= possibleTypePairAdjacencyMatrix[num][i];
+    }
+  }
+  return result;
+};
+
 export interface RecordSchema {
   /**
    * スキーマタイプのバージョン番号.
@@ -153,3 +169,5 @@ export class Record implements RecordSchema {
     }
   }
 }
+
+export { getPossibleTypeNumList };

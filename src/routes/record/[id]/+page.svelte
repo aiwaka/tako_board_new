@@ -2,7 +2,13 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import type { PageData } from "./$types";
-  import { deleteRecordFromFirestore, getOneRecord } from "$lib/records";
+  import {
+    type Record,
+    deleteRecordFromFirestore,
+    getOneRecord,
+    updateOneRecord,
+    type RecordUpdateData,
+  } from "$lib/records";
   import { getImageURL } from "$lib/records/image";
   import { getCurrentUser } from "@/settings/firebase";
   import ButtonUi from "@/components/ButtonUi.svelte";
@@ -16,6 +22,30 @@
       currentUserId = user.uid;
     }
   });
+
+  $: modifying = false;
+  $: newComment = "";
+
+  const startToModifyRecord = (old: Record) => {
+    newComment = old.comment;
+    modifying = true;
+  };
+  const modifyRecord = async (old: Record) => {
+    if (confirm("修正しますか？")) {
+      const payload: RecordUpdateData = {};
+      if (newComment !== old.comment) {
+        payload["comment"] = newComment;
+      }
+      try {
+        await updateOneRecord(currentUserId, data.recordId, payload);
+        Object.assign(old, payload);
+      } catch (e) {
+        alert(e);
+        console.log(e);
+      }
+      modifying = false;
+    }
+  };
 
   const deleteRecord = async () => {
     if (confirm("この記録を削除しますか？")) {
@@ -49,7 +79,18 @@
     <div class="type content">{record.getTypeStr({ full: true })}</div>
     <div class="grid-line" />
     <div class="comment label">コメント</div>
-    <div class="comment content">{record.comment}</div>
+    {#if modifying}
+      <div class="comment content">
+        <textarea
+          id="modify-form-comment"
+          name="comment"
+          placeholder="new comment"
+          bind:value={newComment}
+        />
+      </div>
+    {:else}
+      <div class="comment content">{record.comment}</div>
+    {/if}
     <div class="grid-line" />
     <div class="image">
       {#if record.imageName}
@@ -67,6 +108,14 @@
     {#if currentUserId === record.userId}
       <div class="delete-button-container">
         <ButtonUi alertFlag={true} on:click={deleteRecord}>この記録を削除</ButtonUi>
+      </div>
+      <div class="delete-button-container">
+        {#if modifying}
+          <ButtonUi on:click={() => (modifying = false)}>キャンセル</ButtonUi>
+          <ButtonUi alertFlag={true} on:click={() => modifyRecord(record)}>修正する</ButtonUi>
+        {:else}
+          <ButtonUi on:click={() => startToModifyRecord(record)}>この記録を修正</ButtonUi>
+        {/if}
       </div>
     {/if}
   </div>
@@ -109,6 +158,9 @@
     .image {
       grid-column: 1 / 2;
     }
+  }
+  textarea {
+    width: 100%;
   }
   .error {
     color: red;

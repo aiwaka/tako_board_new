@@ -6,15 +6,16 @@ import { recordConverter } from "./record-firestore-converter";
  * レコードを更新する際のデータ
  */
 interface RecordUpdateData {
-  recordDate?: string;
   comment?: string;
 }
 const validateUpdateData = (updateData: RecordUpdateData): boolean => {
-  if (updateData.recordDate === undefined && updateData.comment === undefined) return false;
+  // 将来の変更に備えてバリデーションを用意しておく
+  if (updateData.comment === undefined) return false;
+  // eslint-disable-next-line prefer-const
   let validated = true;
-  if (updateData.recordDate !== undefined) {
-    validated &&= !isNaN(new Date(updateData.recordDate).getTime());
-  }
+  // if (updateData.recordDate !== undefined) {
+  //   validated &&= !isNaN(new Date(updateData.recordDate).getTime());
+  // }
   return validated;
 };
 

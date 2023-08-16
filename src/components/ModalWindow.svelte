@@ -26,8 +26,11 @@
     <slot />
   </button>
   {#if showContents}
-    <!-- svelte-ignore a11y-click-events-have-key-events アクセシビリティを考慮しなくてよい機能のため警告を無視する. -->
-    <div class="close-modal" on:click={closeModal}>
+    <!--
+      svelte-ignore a11y-click-events-have-key-events
+      アクセシビリティを考慮しなくてよい機能のため警告を無視する.
+    -->
+    <div class="close-modal" role="none" on:click={closeModal}>
       <div class="contents">
         <button class="close-button" on:click={closeModal}> x </button>
         <img class="image" src={imageURL} alt="modal" />

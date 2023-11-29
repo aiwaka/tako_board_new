@@ -18,7 +18,7 @@
   const TYPE_OMIT_THRESHOLD = 8 as const; // タイプ文字列を省略する文字数の閾値
 
   $: typeStrIsLong = record.getTypeStr().length > TYPE_OMIT_THRESHOLD;
-  $: shortTypeStr = record.getTypeStr({ threshold: TYPE_OMIT_THRESHOLD }) + ", 他";
+  $: shortTypeStr = record.getTypeStr({ threshold: TYPE_OMIT_THRESHOLD });
   $: commentIsLong = record.comment.length > COMMENT_OMIT_THRESHOLD;
   $: shortComment = record.comment.substring(0, COMMENT_OMIT_THRESHOLD) + "...";
 

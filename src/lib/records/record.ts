@@ -84,7 +84,7 @@ export class Record implements RecordSchema {
     public recordDate: Timestamp,
     public actualDate: Timestamp,
     public comment: string,
-    public imageName: string | null = null
+    public imageName: string | null = null,
   ) {}
   /**
    * `display`なら表示時刻, `actual`なら実際の入力時刻を整形して取得する.
@@ -133,7 +133,7 @@ export class Record implements RecordSchema {
    * スキーマバージョンやオプション指定により変化する.
    * @param option
    * @param full 完全文字列を使うかどうか
-   * @param threshold 指定した文字数を超えないようにする
+   * @param threshold 文字数制限。1より大きくなければならない。超過した場合は「他」が付与され、それを含めて超過しない。
    */
   public getTypeStr(option: { full?: boolean; threshold?: number } = {}): string {
     // 完全文字列指定かどうかで用いるメソッドを分ける
@@ -142,27 +142,32 @@ export class Record implements RecordSchema {
       const recordType = this.recordType as number;
       return getStrMethod(recordType);
     } else if (this.version === 2) {
-      const recordTypeNumList = this.recordType as number[];
-      const recordTypeStrList = [] as string[];
-      for (const num of recordTypeNumList) {
-        recordTypeStrList.push(getStrMethod(num));
-      }
+      const threshold = option.threshold;
+      const recordTypeStrList = (this.recordType as number[]).map((typeNum) =>
+        getStrMethod(typeNum),
+      );
       if (recordTypeStrList.length === 0) return "";
-      // joinの処理にthreshold処理を挟む
-      let resultStr = recordTypeStrList[0];
-      if (option.threshold && resultStr.length > option.threshold) {
-        return "";
-      }
-      for (const typeStr of recordTypeStrList.slice(1)) {
-        // thresholdが指定されている場合は先に文字数を計算して超えているならそこで終わる.
-        if (option.threshold) {
-          const temp = resultStr + ", " + typeStr;
-          if (temp.length > option.threshold) {
-            break;
+      // 文字数制限を超えないように文字列の配列の部分配列を作る。
+      const usingTypeStrList = recordTypeStrList.reduce((accum, typeStr) => {
+        // accumに含まれる文字列の長さの合計
+        const accumLength = accum.reduce((total, s) => total + s.length, 0);
+        if (threshold && accumLength + typeStr.length > threshold - 1) {
+          // 最後の要素かつ長さが1の場合だけは追加（最終的に変わらないため）
+          if (recordTypeStrList.length - accum.length === 1 && typeStr.length === 1) {
+            accum.push(typeStr);
           }
+          return accum;
+        } else {
+          accum.push(typeStr);
+          return accum;
         }
-        resultStr += ", " + typeStr;
+      }, [] as string[]);
+      // 部分配列の長さがもとと違っていれば「他」を追加
+      if (usingTypeStrList.length != recordTypeStrList.length) {
+        usingTypeStrList.push("他");
       }
+      const resultStr = usingTypeStrList.join(", ");
+
       return resultStr;
     } else {
       throw new Error("バージョンが不正です");

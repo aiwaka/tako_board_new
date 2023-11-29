@@ -34,6 +34,7 @@
   <meta property="og:site_name" content="Tako Board" />
   <meta property="og:image" content="https://tako-board-1.web.app/img/logo.png" />
   <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="SvelteKit 1.27.5" />
 </svelte:head>
 
 <SiteHeader navLinkList={pageList} />

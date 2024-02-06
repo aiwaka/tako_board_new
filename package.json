@@ -31,5 +31,9 @@
   "type": "module",
   "dependencies": {
     "firebase": "^10.6.0"
+  },
+  "volta": {
+    "node": "20.11.0",
+    "npm": "10.4.0"
   }
 }

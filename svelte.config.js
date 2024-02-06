@@ -1,6 +1,12 @@
 // import adapter from "@sveltejs/adapter-auto";
 import staticAdapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/kit/vite";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const file = fileURLToPath(new URL("package.json", import.meta.url));
+const json = readFileSync(file, "utf8");
+const pkg = JSON.parse(json);
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -15,6 +21,9 @@ const config = {
       pages: "dist",
       precompress: false,
     }),
+    version: {
+      name: pkg.version,
+    },
   },
 };
 

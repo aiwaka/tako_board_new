@@ -1,6 +1,7 @@
 <script lang="ts">
-  import PageLink from "@/components/PageLink.svelte";
   import { base } from "$app/paths";
+
+  import PageLink from "@/components/PageLink.svelte";
 
   interface NavLink {
     name: string;
